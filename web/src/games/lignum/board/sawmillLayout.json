@@ -1,0 +1,292 @@
+{
+  "sawmill": {
+    "width": 1600,
+    "height": 1597,
+    "regions": {
+      "fodder": {
+        "label": "Fodder storage",
+        "x": 250,
+        "y": 288,
+        "w": 376,
+        "h": 245
+      },
+      "hired": {
+        "label": "Worker area (hired)",
+        "x": 888,
+        "y": 324,
+        "w": 100,
+        "h": 132
+      },
+      "mill": {
+        "label": "Mill worker spot",
+        "x": 775,
+        "y": 308,
+        "w": 130,
+        "h": 115
+      },
+      "huts": {
+        "label": "Hut effects",
+        "x": 1275,
+        "y": 285,
+        "w": 574,
+        "h": 245
+      },
+      "food": {
+        "label": "Food storage",
+        "x": 251,
+        "y": 577,
+        "w": 373,
+        "h": 247
+      },
+      "equip": {
+        "label": "Equipment",
+        "x": 813,
+        "y": 654,
+        "w": 317,
+        "h": 232
+      },
+      "craft": {
+        "label": "Craftwork",
+        "x": 1083,
+        "y": 654,
+        "w": 223,
+        "h": 232
+      },
+      "river": {
+        "label": "River",
+        "x": 583,
+        "y": 853,
+        "w": 128,
+        "h": 128
+      },
+      "store": {
+        "label": "Storage",
+        "x": 251,
+        "y": 872,
+        "w": 373,
+        "h": 249
+      },
+      "sawing": {
+        "label": "Sawing",
+        "x": 250,
+        "y": 1171,
+        "w": 376,
+        "h": 248
+      },
+      "sale": {
+        "label": "Sale area",
+        "x": 727,
+        "y": 1305,
+        "w": 190,
+        "h": 285
+      },
+      "dry1": {
+        "label": "Drying area 1",
+        "x": 968,
+        "y": 1303,
+        "w": 200,
+        "h": 285
+      },
+      "dry2": {
+        "label": "Drying area 2",
+        "x": 1209,
+        "y": 1303,
+        "w": 200,
+        "h": 285
+      },
+      "dry3": {
+        "label": "Drying area 3",
+        "x": 1449,
+        "y": 1303,
+        "w": 200,
+        "h": 285
+      }
+    }
+  },
+  "extension": {
+    "width": 800,
+    "height": 1476,
+    "regions": {
+      "joinery": {
+        "label": "Joinery",
+        "x": 400,
+        "y": 385,
+        "w": 640,
+        "h": 250
+      },
+      "buildings": {
+        "label": "Buildings",
+        "x": 400,
+        "y": 905,
+        "w": 380,
+        "h": 375
+      },
+      "building_slot_1": {
+        "label": "Building space 1",
+        "x": 400,
+        "y": 908,
+        "w": 370,
+        "h": 370
+      },
+      "building_slot_2": {
+        "label": "Building space 2",
+        "x": 400,
+        "y": 1300,
+        "w": 370,
+        "h": 340
+      },
+      "small_storage": {
+        "label": "Small storage area",
+        "x": 400,
+        "y": 1315,
+        "w": 360,
+        "h": 300
+      }
+    }
+  },
+  "sawmill_generic": {
+    "width": 1600,
+    "height": 1597,
+    "regions": {
+      "fodder": {
+        "label": "Fodder storage",
+        "x": 250,
+        "y": 288,
+        "w": 376,
+        "h": 248
+      },
+      "hired": {
+        "label": "Worker area (hired)",
+        "x": 874,
+        "y": 288,
+        "w": 120,
+        "h": 150
+      },
+      "mill": {
+        "label": "Mill worker spot",
+        "x": 742,
+        "y": 288,
+        "w": 120,
+        "h": 150
+      },
+      "huts": {
+        "label": "Hut effects",
+        "x": 1275,
+        "y": 288,
+        "w": 574,
+        "h": 248
+      },
+      "food": {
+        "label": "Food storage",
+        "x": 250,
+        "y": 580,
+        "w": 376,
+        "h": 248
+      },
+      "equip": {
+        "label": "Equipment",
+        "x": 790,
+        "y": 580,
+        "w": 300,
+        "h": 248
+      },
+      "craft": {
+        "label": "Craftwork",
+        "x": 1079,
+        "y": 580,
+        "w": 230,
+        "h": 248
+      },
+      "river": {
+        "label": "River",
+        "x": 583,
+        "y": 872,
+        "w": 128,
+        "h": 128
+      },
+      "store": {
+        "label": "Storage",
+        "x": 250,
+        "y": 872,
+        "w": 376,
+        "h": 248
+      },
+      "sawing": {
+        "label": "Sawing",
+        "x": 250,
+        "y": 1164,
+        "w": 376,
+        "h": 248
+      },
+      "sale": {
+        "label": "Sale area",
+        "x": 727,
+        "y": 1300,
+        "w": 200,
+        "h": 285
+      },
+      "dry1": {
+        "label": "Drying area 1",
+        "x": 967,
+        "y": 1300,
+        "w": 200,
+        "h": 285
+      },
+      "dry2": {
+        "label": "Drying area 2",
+        "x": 1207,
+        "y": 1300,
+        "w": 200,
+        "h": 285
+      },
+      "dry3": {
+        "label": "Drying area 3",
+        "x": 1447,
+        "y": 1300,
+        "w": 200,
+        "h": 285
+      }
+    }
+  },
+  "extension_generic": {
+    "width": 800,
+    "height": 1476,
+    "regions": {
+      "joinery": {
+        "label": "Joinery",
+        "x": 400,
+        "y": 385,
+        "w": 640,
+        "h": 250
+      },
+      "buildings": {
+        "label": "Buildings",
+        "x": 400,
+        "y": 990,
+        "w": 380,
+        "h": 900
+      },
+      "building_slot_1": {
+        "label": "Building space 1",
+        "x": 400,
+        "y": 690,
+        "w": 360,
+        "h": 280
+      },
+      "building_slot_2": {
+        "label": "Building space 2",
+        "x": 400,
+        "y": 990,
+        "w": 360,
+        "h": 280
+      },
+      "small_storage": {
+        "label": "Small storage area",
+        "x": 400,
+        "y": 1290,
+        "w": 360,
+        "h": 280
+      }
+    }
+  }
+}

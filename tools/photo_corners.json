@@ -1,0 +1,35 @@
+{
+  "_note": "Pixel corners (TL, TR, BR, BL) of each board in its photo, after EXIF rotation. Adjust by eye and rerun tools.prep_photos. width is the output width; height follows from the corner geometry unless given.",
+  "board-joinery": {
+    "photo": "third_party/rules/photos/board_joinery_side.jpg",
+    "category": "boards",
+    "file": "boards/board_joinery.webp",
+    "alt": "Joinery and Buildings board side",
+    "width": 1600,
+    "corners": [[221, 311], [3987, 304], [3987, 2835], [141, 2825]],
+    "fixes": {
+      "glare": {
+        "center": [770, 700],
+        "sigma": [190, 170],
+        "gain": 0.58,
+        "saturation": 1.8
+      },
+      "edge_fill": {
+        "edge": [1512, 0],
+        "slope": 0.13,
+        "inner": [1478, 0],
+        "inner_slope": 0.1,
+        "y_max": 700,
+        "feather": 3
+      }
+    }
+  },
+  "player-extension": {
+    "photo": "third_party/rules/photos/player_board_extension.jpg",
+    "category": "boards",
+    "file": "boards/player_extension.webp",
+    "alt": "Player board extension (Joinery and Buildings)",
+    "width": 800,
+    "corners": [[310, 0], [2625, 0], [2465, 4000], [440, 4000]]
+  }
+}

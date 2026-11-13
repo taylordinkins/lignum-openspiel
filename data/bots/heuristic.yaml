@@ -1,0 +1,81 @@
+# Heuristic bot weights (PLAN D32). Bot policy only: no rules content, no component values.
+# Prices and capacities come from data/components/*.yaml via the engine tables; this file holds
+# only the bot's preferences.
+
+# Supply-path stops ranked by marginal value per stop (higher is visited first; ties go to the
+# lower-numbered location). Order follows the community strategy post: joker / set-completing
+# craftwork, planned work, task cards, cutters and bearers by wood kind, sawyers, then $1 and
+# food / saws at $1, then Market, wheat + wagons, raft, sledge, the wheat craftwork.
+# Keys: token spots by token name; craft_set = a craftwork token matching one already held;
+# woodcutters_* / bearers_* by the best wood kind in the seat's cutting area (hw, sw, fw);
+# market_sell = Market while holding a sellable craftwork set; other keys are location kinds.
+location_weights:
+  joker: 10.0
+  craft_set: 9.0
+  planned_work: 8.0
+  tasks: 7.0
+  woodcutters_hw: 6.5
+  bearers_hw: 6.0
+  woodcutters_sw: 5.5
+  buildings: 5.5
+  bearers_sw: 5.0
+  sawyers: 4.5
+  market_sell: 4.0
+  joiner: 4.0
+  dollar: 3.0
+  food: 2.5
+  saw: 2.5
+  woodcutters_fw: 2.0
+  bearers_fw: 2.0
+  market: 2.0
+  wagon: 1.8
+  raft: 1.5
+  sledge: 1.2
+  fodder: 1.0
+  craft_other: 1.0
+  clearing: 0.0
+
+# Workers hired in one visit, by the best wood kind in the cutting area.
+woodcutter_cap: {hw: 3, sw: 2, fw: 1}
+bearer_cap: {hw: 3, sw: 2, fw: 1}
+max_sawyers: 1        # hired per round (the free one only)
+saw_target: 1         # buy saws at the Market up to this many
+reserve_money: 2      # paid stops that are not workers keep this much money in hand
+max_held_tasks: 2     # no further task cards once this many are held
+
+# Planned-work card preference (card ids from planned_work.yaml); higher is better. A plan is
+# taken at the earliest pair.
+plan_weights:
+  pw_sawing: 5.0
+  pw_overtime: 5.0
+  pw_cutting: 4.5
+  pw_log_driving: 3.5
+  pw_craftwork: 3.0
+  pw_drying: 3.0
+  pw_heating_supply: 3.0
+  pw_food_supply: 2.5
+  pw_trade: 1.0
+  pw_hut_construction: 0.0
+
+# Building preference (ids from buildings.yaml); unlisted buildings rank last.
+building_order: [office, small_workshop, storeroom, field, inn, drying_area_upgrade, small_joinery, marketstand, small_storage_area, waterchannel]
+
+# Hidden pick (PK): value per wood piece in an area, by kind (firewood, softwood, hardwood).
+area_wood_weight: [0.5, 1.5, 3.0]
+
+# Value-function weights (lignum/bots/value.py). Dollars-valued discounts and weights only; prices
+# and card values come from data/components.
+value:
+  sale_discount: 0.9          # wood in the sale area: sold or dried next, small risk of being stuck
+  dry_discount: 0.9           # wood in drying areas: sells at the current bonus or a better one
+  joinery_uncovered: 0.3      # joinery piece in a slot without a joiner (a joiner may still come)
+  upstream_discount: 0.5      # sawing area / woodpile: needs sawyer, saw, transport, a free round
+  river_discount: 0.4         # river wood: a round later, then the same chain
+  task_partial_weight: 0.6    # incomplete task: reward x progress x this (pays 0 if never done)
+  plan_value: 1.5             # one planned-work plan still to execute (its cost is already paid)
+  building_value: 3.0         # one owned building (coarse; effects are not modelled)
+  craft_discount: 0.8         # craftwork sets: held tokens carry over but need a Market visit
+  craft_single_discount: 0.5  # a lone craftwork token, fraction of a half set price
+  winter_horizon: 4           # winters further than this many rounds away get the minimum weight
+  winter_min_weight: 0.3      # share of a far winter's shortfall that is counted
+  joiner_income_discount: 1.0 # future joiner income is certain

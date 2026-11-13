@@ -1,0 +1,63 @@
+# Lignum supply-path data (RULES_SPEC R-002, R-021..R-025, R-032). Component values live only here.
+# Sources: the Lignum base rulebook p.2 and third_party/art/boards/board.webp (20-location side);
+# third_party/rules/photos/board_joinery_side.jpg (22-location side); Buildings capacity 2 from D20
+# (PLAN.md C1; the spec's 2 is followed). Locations are listed in path order; number is the printed
+# number and the order (R-032). kind names the acquisition; token_spot holds one of the 13 path tokens (R-023).
+# capacity is the number of foremen that may stand on the location at once (R-040). The foremen start
+# on location 0 (R-016), which is not a location here. Numbers are qualified by side in ids.
+
+sides:
+  base:
+    locations:
+      - {id: base_1, number: 1, kind: token_spot, name: "Token spot 1", capacity: 1}
+      - {id: base_2, number: 2, kind: token_spot, name: "Token spot 2", capacity: 1}
+      - {id: base_3, number: 3, kind: token_spot, name: "Token spot 3", capacity: 1}
+      - {id: base_4, number: 4, kind: bearers, name: "Bearers", capacity: 4}
+      - {id: base_5, number: 5, kind: token_spot, name: "Token spot 5", capacity: 1}
+      - {id: base_6, number: 6, kind: fodder, name: "Fodder", capacity: 2}
+      - {id: base_7, number: 7, kind: token_spot, name: "Token spot 7", capacity: 1}
+      - {id: base_8, number: 8, kind: planned_work, name: "Planned Work", capacity: 4}
+      - {id: base_9, number: 9, kind: token_spot, name: "Token spot 9", capacity: 1}
+      - {id: base_10, number: 10, kind: woodcutters, name: "Woodcutters", capacity: 4}
+      - {id: base_11, number: 11, kind: token_spot, name: "Token spot 11", capacity: 1}
+      - {id: base_12, number: 12, kind: token_spot, name: "Token spot 12", capacity: 1}
+      - {id: base_13, number: 13, kind: tasks, name: "Tasks", capacity: 4}
+      - {id: base_14, number: 14, kind: token_spot, name: "Token spot 14", capacity: 1}
+      - {id: base_15, number: 15, kind: token_spot, name: "Token spot 15", capacity: 1}
+      - {id: base_16, number: 16, kind: sawyers, name: "Sawyers", capacity: 4}
+      - {id: base_17, number: 17, kind: token_spot, name: "Token spot 17", capacity: 1}
+      - {id: base_18, number: 18, kind: token_spot, name: "Token spot 18", capacity: 1}
+      - {id: base_19, number: 19, kind: market, name: "Market", capacity: 4}
+      - {id: base_20, number: 20, kind: token_spot, name: "Token spot 20", capacity: 1}
+  joinery:
+    locations:
+      - {id: joinery_1, number: 1, kind: token_spot, name: "Token spot 1", capacity: 1}
+      - {id: joinery_2, number: 2, kind: token_spot, name: "Token spot 2", capacity: 1}
+      - {id: joinery_3, number: 3, kind: token_spot, name: "Token spot 3", capacity: 1}
+      - {id: joinery_4, number: 4, kind: bearers, name: "Bearers", capacity: 4}
+      - {id: joinery_5, number: 5, kind: token_spot, name: "Token spot 5", capacity: 1}
+      - {id: joinery_6, number: 6, kind: fodder, name: "Fodder", capacity: 2}
+      - {id: joinery_7, number: 7, kind: token_spot, name: "Token spot 7", capacity: 1}
+      - {id: joinery_8, number: 8, kind: planned_work, name: "Planned Work", capacity: 4}
+      - {id: joinery_9, number: 9, kind: token_spot, name: "Token spot 9", capacity: 1}
+      - {id: joinery_10, number: 10, kind: woodcutters, name: "Woodcutters", capacity: 4}
+      - {id: joinery_11, number: 11, kind: token_spot, name: "Token spot 11", capacity: 1}
+      - {id: joinery_12, number: 12, kind: buildings, name: "Buildings", capacity: 2}
+      - {id: joinery_13, number: 13, kind: token_spot, name: "Token spot 13", capacity: 1}
+      - {id: joinery_14, number: 14, kind: tasks, name: "Tasks", capacity: 4}
+      - {id: joinery_15, number: 15, kind: token_spot, name: "Token spot 15", capacity: 1}
+      - {id: joinery_16, number: 16, kind: joiner, name: "Joiner", capacity: 1}
+      - {id: joinery_17, number: 17, kind: token_spot, name: "Token spot 17", capacity: 1}
+      - {id: joinery_18, number: 18, kind: sawyers, name: "Sawyers", capacity: 4}
+      - {id: joinery_19, number: 19, kind: token_spot, name: "Token spot 19", capacity: 1}
+      - {id: joinery_20, number: 20, kind: token_spot, name: "Token spot 20", capacity: 1}
+      - {id: joinery_21, number: 21, kind: market, name: "Market", capacity: 4}
+      - {id: joinery_22, number: 22, kind: token_spot, name: "Token spot 22", capacity: 1}
+
+# Forest clearing (R-024): four ordered slots after the last location, one player at most per slot.
+forest_clearing:
+  slots: [A, B, C, D]
+  capacity_per_slot: 1
+
+# Token spots per side (R-023); the 13 mixed path tokens fill one spot each (R-017).
+token_spot_count: 13

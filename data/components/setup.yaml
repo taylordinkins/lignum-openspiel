@@ -1,0 +1,172 @@
+# Lignum setup data (RULES_SPEC R-006..R-019, R-025, R-075). Component values live only here.
+# Sources: base rulebook p.3-5 and p.17, joinery rulebook p.1, the printed player-count tables on
+# third_party/art/boards/board.webp and third_party/rules/photos/board_joinery_side.jpg, and
+# third_party/art/boards/sawmill.webp (fodder storage). Quantities are by player count.
+# Derived values (e.g. the 3 firewood cutting-area count equals players) are not stored beyond what
+# R-013 tabulates.
+
+by_players:
+  2:
+    bearers_on_path: 6
+    woodcutters_on_path: 8
+    fodder_on_path: 1
+    sawyers_price_0: 2
+    sawyers_price_1: 1
+    placement_cards_per_round: 1       # rounds 2 onward (R-013)
+    cutting_areas_with_3_firewood: 2
+    cutting_areas_with_2_firewood: 4
+    task_cards_laid_out: 2
+    pw_cards_laid_out: 4
+    buildings_drawn: 6                 # joinery=true only
+    path_equipment_tokens:             # the 10 equipment tokens, R-017 (X-marker spots unusable)
+      wagon: 1
+      raft: 2
+      saw: 1
+      sledge: 1
+      dollar: 1
+      food: 2
+      x_marker: 2
+  3:
+    bearers_on_path: 8
+    woodcutters_on_path: 12
+    fodder_on_path: 2
+    sawyers_price_0: 3
+    sawyers_price_1: 1
+    placement_cards_per_round: 2
+    cutting_areas_with_3_firewood: 3
+    cutting_areas_with_2_firewood: 3
+    task_cards_laid_out: 3
+    pw_cards_laid_out: 5
+    buildings_drawn: 7
+    path_equipment_tokens: {wagon: 2, raft: 2, saw: 2, sledge: 1, dollar: 1, food: 2}
+  4:
+    bearers_on_path: 10
+    woodcutters_on_path: 16
+    fodder_on_path: 2
+    sawyers_price_0: 4
+    sawyers_price_1: 1
+    placement_cards_per_round: 3
+    cutting_areas_with_3_firewood: 4
+    cutting_areas_with_2_firewood: 2
+    task_cards_laid_out: 4
+    pw_cards_laid_out: 6
+    buildings_drawn: 8
+    path_equipment_tokens: {wagon: 2, raft: 2, saw: 2, sledge: 1, dollar: 1, food: 2}
+
+# 13 path tokens = 10 equipment (above) + this many craftwork tokens drawn from the pile (R-017).
+path_craftwork_tokens: 3          # 10 equipment + 3 = the 13 token spots (path.yaml token_spot_count)
+
+# Sawyer prices (R-025): the first sawyer a seat takes in a round is free; the priced one is the extra.
+sawyer_prices: {first: 0, extra: 1}
+
+# Cutting areas (R-004, R-015): six areas numbered 1-6; firewood disks per area at setup.
+cutting_areas: 6
+cutting_area_firewood: {with_3: 3, with_2: 2}
+
+# Starting holdings (R-018); the foreman starts on location 0 (R-016).
+starting_holdings:
+  money: 5
+  foreman_location: 0
+  mill_workers: 1
+  loans: 0
+
+# Per-seat components (R-008).
+per_seat:
+  planned_work_tokens: 6
+  cutting_area_tokens: 6
+  foremen: 1
+  turn_order_disks: 1
+  sawmill_boards: 1
+  woodpile_tiles: 1
+
+# Component pools (R-006, R-007, R-009). unlimited means amount markers or substitutes stand in.
+supply:
+  woodcutters: 16
+  bearers: 10
+  sawyers: 5
+  mill_workers: 4
+  joiners: 6                 # joinery=true only
+  buildings_total: 10        # joinery=true only
+  craftwork_by_type: {board: 4, shingle: 4, stake: 4, reed: 4, joker: 2}
+  fodder: 8
+  unlimited: [wood, food, fodder, equipment, money]   # R-009, O-4
+  # Holding limits per seat (R-041, R-010, R-011).
+  max_saws_per_seat: 4
+
+# Sawmill board (R-008): fodder storage slots hold fodder valued 3 and 2 (R-041, R-052);
+# three drying areas (R-059); sale bonuses per area are in `drying_bonuses` below.
+sawmill:
+  fodder_slot_values: [3, 2]
+  drying_areas: 3
+  hut_effect_slots: 3
+
+# Base wood sale prices (R-058, Base p.13 table; also the winter shortfall sale R-073 and final sale R-081).
+# Unmilled hardwood cannot be sold (null).
+wood_prices:
+  hardwood: {milled: 5, unmilled: null}
+  softwood: {milled: 2, unmilled: 4}
+  firewood: {milled: 1, unmilled: 3}
+
+# Sale bonus added to a piece's base price by the area it stands in (R-058, R-059, R-073, R-081).
+# Sawing area, firewood storage and river carry none.
+drying_bonuses: {sale_area: 0, drying_1: 0, drying_2: 1, drying_3: 2}
+
+# Player-board extension (R-010, joinery=true).
+player_board_extension:
+  joiner_spaces: 3
+  joinery_wood_slots: 3
+  building_spaces: 2
+
+# Sprite counts for the 4 player colours (PLAN Appendix A "Sawmill pad and extension 4 + 4").
+sawmill_pads: 4
+player_board_extensions: 4
+
+# Loan cards (R-011, R-075): 4 in the supply, "4/7" side up; first loan $4, second $4 ("16" side).
+loans:
+  cards: 4
+  max_per_seat: 2
+  amount_each: 4
+  sides: ["4/7", "16"]
+  repayment: {1: 7, 2: 16}   # game-end repayment by number of loans held (R-077)
+
+# Joinery and Buildings setup (R-019), joinery=true only.
+joinery_setup:
+  joiners_on_path: 1
+  # Joiners in supply: supply.joiners. Buildings drawn: by_players[n].buildings_drawn (R-013).
+
+# Base numbers printed on the board, sawmill board, extension and loan cards. Modifiers (planned
+# work, buildings) live in planned_work.yaml / buildings.yaml and replace these values.
+
+# Prices paid to the bank at path locations (R-041). Sawyer prices are `sawyer_prices` above.
+location_prices:
+  bearer: 1
+  fodder: 1                  # a building makes it 0 (buildings.yaml)
+  woodcutter: 1
+  task: 1
+  planned_work_per_token: 1  # R-088
+  market_saw: 1              # R-104
+  market_food: 1             # R-104
+  cutting_area_move: 1       # R-048
+
+# Market sale of craftwork sets by number of identical tokens (R-105); PW Craftwork overrides (R-091).
+craftwork_set_prices: {2: 2, 3: 4, 4: 6}
+
+# Sawing (R-054): logs produced per milled disk, by kind (sawmill.webp, Base p.12).
+sawing_yield: {hardwood: 1, softwood: 3, firewood: 4}
+
+# Drying areas (R-059): one unmilled disk or up to this many milled logs.
+drying_area_capacity: {disks: 1, logs: 2}
+
+# Joiner numbers (joinery=true).
+joiner:
+  income_per_round: 1        # R-079, start of each non-winter round
+  food_per_winter: 1         # extra food at winter feeding per joiner (R-071)
+joinery_bonus: 3             # added to the milled price of a covered joinery piece (R-082); Small Joinery 4
+
+# Winter (R-066, R-067, R-071, R-072).
+winter:
+  woodcutting_first: 2       # firewood from the first woodcutting action
+  woodcutting_each_further: 1  # hut workers (R-066)
+  sledge_base_pieces: 2
+  sledge_max_food: 3         # 1 extra piece per food, so at most 5 per sledge (R-067)
+  shortfall_per_unit: 3      # dollars per missing food or heating unit (R-071, R-072, R-073)

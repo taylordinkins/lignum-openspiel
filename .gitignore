@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+htmlcov/
+
+# Node / web
+node_modules/
+web/dist/
+web/playwright-report/
+web/test-results/
+
+# Claude Code: personal settings and non-shared agent memory
+.claude/settings.local.json
+.claude/agent-memory-local/
+
+# Editors / OS
+.DS_Store
+.idea/
+.vscode/
+
+# Training scratch output
+runs/
+data/bot_games/
+data/bots/az/shards/
+data/bots/az/*.pt
+data/bots/az/*.npz
+!data/bots/az/current.npz
+
+# Copyrighted rulebooks and official art: local only, never committed (see README)
+third_party/

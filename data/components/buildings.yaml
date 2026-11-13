@@ -1,0 +1,36 @@
+# Lignum building data (RULES_SPEC R-010, R-019, R-106..R-116). Card values live only here.
+# Sources: third_party/rules/photos/buildings.jpg (10 tiles, no cost printed: all are free, R-106),
+# the Joinery expansion rulebook p.4 and third_party/rules/player_aid.txt ("BUILDINGS").
+# Numeric parameters are the numbers named in each rule; behaviour stays in the spec.
+
+buildings:
+  - id: waterchannel
+    name: Waterchannel
+    params: {immediate_pieces_per_transport_phase: 1}
+  - id: marketstand
+    name: Marketstand
+    params: {food_sale_price: 1}
+  - id: storeroom
+    name: Storeroom
+    params: {winter_food_reduction: 1}
+  - id: small_workshop
+    name: Small Workshop
+    params: {reed_as_shingle_max: 1}
+  - id: drying_area_upgrade
+    name: Drying Area Upgrade
+    params: {drying_area_capacity: 2}
+  - id: small_joinery
+    name: Small Joinery
+    params: {joinery_bonus: 4}
+  - id: inn
+    name: Inn
+    params: {planned_work_cost: 0}
+  - id: small_storage_area
+    name: Small Storage Area
+    params: {capacity: 1}
+  - id: field
+    name: Field
+    params: {fodder_cost: 0}
+  - id: office
+    name: Office
+    params: {money_per_task_card: 1}

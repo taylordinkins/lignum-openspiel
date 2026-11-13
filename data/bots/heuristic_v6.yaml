@@ -1,0 +1,161 @@
+# heuristic-v6: Phase 7 unit 5b. heuristic-v4 (copy, keep in sync by hand) plus the own-turn solver (lignum/bots/solver.py) in wood-work phases W1-W7: searches the seat's action sequence to the end of its turn, leaf = the hand-set value. W5 and W7 stay v4; W6 keeps the pipeline's reserved-piece sale filter.
+# Heuristic bot weights (PLAN D32). Bot policy only: no rules content, no component values.
+# Prices and capacities come from data/components/*.yaml via the engine tables; this file holds
+# only the bot's preferences.
+
+# Supply-path stops ranked by marginal value per stop (higher is visited first; ties go to the
+# lower-numbered location). Order follows the community strategy post: joker / set-completing
+# craftwork, planned work, task cards, cutters and bearers by wood kind, sawyers, then $1 and
+# food / saws at $1, then Market, wheat + wagons, raft, sledge, the wheat craftwork.
+# Keys: token spots by token name; craft_set = a craftwork token matching one already held;
+# woodcutters_* / bearers_* by the best wood kind in the seat's cutting area (hw, sw, fw);
+# market_sell = Market while holding a sellable craftwork set; other keys are location kinds.
+location_weights:
+  joker: 10.0
+  craft_set: 9.0
+  planned_work: 8.0
+  tasks: 7.0
+  woodcutters_hw: 6.5
+  bearers_hw: 6.0
+  woodcutters_sw: 5.5
+  buildings: 5.5
+  bearers_sw: 5.0
+  sawyers: 4.5
+  market_sell: 4.0
+  joiner: 4.0
+  dollar: 3.0
+  food: 2.5
+  saw: 2.5
+  woodcutters_fw: 2.0
+  bearers_fw: 2.0
+  market: 2.0
+  wagon: 1.8
+  raft: 1.5
+  sledge: 1.2
+  fodder: 1.0
+  craft_other: 1.0
+  saw_need: 6.0         # token spot saw while winter heat needs more saws (v2 provisioning)
+  market_need: 5.0      # Market while winter needs a saw or food bought (v2 provisioning)
+  bearers_backlog: 6.8  # bearers while the woodpile (and this round's cuts) outnumber the carriers (v2 flow)
+  clearing: 0.0
+
+# Winter provisioning (v2): 1 turns on the saw / food purchase rules in the heuristic.
+provision: 1
+
+# Task pipeline (v2, lignum/bots/tasks.py): 1 turns on task scoring at the Tasks stop and wood
+# routing in W5-W7 (place first, keep reserved pieces out of the sale, dry them first). A task's
+# completion chance multiplies the chance of each free slot (wood in the sale / drying areas at the
+# right stage in time = 1, upstream wood by what is hired, wood not yet cut by the kinds in the
+# seat's cutting area and the rounds left). Measured at the current wood throughput (about 10 pieces
+# cut per game) most tasks cannot be finished, so the take threshold is high.
+task_pipeline: 1
+task_take_prob: 0.6     # a task card is taken only if its completion chance is at least this
+task_take_margin: 0.0   # ... and reward x chance - cost x task_cost_weight - card price is at least this
+task_place_prob: 0.5    # wood stays reserved for a held task while its chance is at least this
+task_commit_prob: 0.75  # wood is locked on a task only when every free slot has its piece in hand
+                        # (sure) or the chance is at least this
+
+# Wood flow (v2, unit 1e): 1 sizes the bearer hire by the backlog (woodpile + cuts this round).
+flow: 1
+flow_max_bearers: 3
+flow_cut_share: 0.5
+
+# Workers hired in one visit, by the best wood kind in the cutting area.
+woodcutter_cap: {hw: 3, sw: 2, fw: 1}
+bearer_cap: {hw: 3, sw: 2, fw: 1}
+max_sawyers: 1        # hired per round (the free one only)
+saw_target: 1         # buy saws at the Market up to this many
+reserve_money: 2      # paid stops that are not workers keep this much money in hand
+max_held_tasks: 2     # no further task cards once this many are held
+
+# Planned-work card preference (card ids from planned_work.yaml); higher is better. A plan is
+# taken at the earliest pair.
+plan_weights:
+  pw_sawing: 5.0
+  pw_overtime: 5.0
+  pw_cutting: 4.5
+  pw_log_driving: 3.5
+  pw_craftwork: 3.0
+  pw_drying: 3.0
+  pw_heating_supply: 3.0
+  pw_food_supply: 2.5
+  pw_trade: 1.0
+  pw_hut_construction: 0.0
+
+# Building preference (ids from buildings.yaml); unlisted buildings rank last.
+building_order: [office, small_workshop, storeroom, field, inn, drying_area_upgrade, small_joinery, marketstand, small_storage_area, waterchannel]
+
+# Hidden pick (PK): value per wood piece in an area, by kind (firewood, softwood, hardwood).
+area_wood_weight: [0.5, 1.5, 3.0]
+
+# Value-function weights (lignum/bots/value.py). Dollars-valued discounts and weights only; prices
+# and card values come from data/components.
+value:
+  sale_discount: 0.9          # wood in the sale area: sold or dried next, small risk of being stuck
+  dry_discount: 0.9           # wood in drying areas: sells at the current bonus or a better one
+  joinery_uncovered: 0.3      # joinery piece in a slot without a joiner (a joiner may still come)
+  upstream_discount: 0.5      # sawing area / woodpile: needs sawyer, saw, transport, a free round
+  river_discount: 0.4         # river wood: a round later, then the same chain
+  # Task pipeline: held task = reward x completion chance (lignum/bots/tasks.py) x this weight;
+  # 0 = reward x progress x task_partial_weight (v1).
+  task_plan_weight: 0.35
+  task_cost_weight: 0.3       # share of a task's wood sale value counted as its cost when taking it
+  task_future_base: 0.1       # per round chance to cut a needed kind not yet in hand: base + step
+  task_future_step: 0.1       # per piece of that kind in the seat's cutting area, capped at max
+  task_future_max: 0.4
+  task_partial_weight: 0.6    # incomplete task: reward x progress x this (pays 0 if never done)
+  plan_value: 1.5             # one planned-work plan still to execute (its cost is already paid)
+  building_value: 3.0         # one owned building (coarse; effects are not modelled)
+  craft_discount: 0.8         # craftwork sets: held tokens carry over but need a Market visit
+  craft_single_discount: 0.5  # a lone craftwork token, fraction of a half set price
+  winter_horizon: 4           # winters further than this many rounds away get the minimum weight
+  winter_min_weight: 0.3      # share of a far winter's shortfall that is counted
+  joiner_income_discount: 1.0 # future joiner income is certain
+  # Winter provisioning (v2): unmilled wood upstream counts as heat to come, as a share of the
+  # shortfall it would avoid. Sawing area wood needs a saw and a worker; woodpile wood also needs
+  # transport. 0 turns it off (v1).
+  heat_credit_sawing: 0.5
+  heat_credit_woodpile: 0.25
+  heat_full_weight: 1       # stocked heat is kept for later winters, so it counts at the full charge
+
+# Joinery (v2, unit 1d step 3). A joiner is a free hire that pays $1 per later seasonal round and
+# costs 1 food per winter, so early hires pay for themselves and fund workers; late hires lose.
+# Placement (R-057) needs a milled log standing in drying area 2 at a W5 / round-8 N4, so with
+# joinery_plan 1 the bot keeps one milled log per kind (hardwood first) out of the sale, dries it
+# first, and places it in the lowest free slot while a joiner covers it (R-082: price + $3).
+# Measured on seeds 21, 22, 31, 32 (100 games each): about +2.6 $/game vs no plan, 2 joiners
+# about +1 $/game over 3. Remove joiner_max / joiner_last_round to hire without limit.
+joinery_plan: 1
+joiner_max: 2
+
+# Sawing throughput (v4, unit 1g step b): 1 keeps the mill worker for W4 / N3 sawing in the
+# woodcutting and transport phases while a saw is in the equipment area, no hired sawer is left
+# unused and discs already wait in the sawing area. 0 = v2 behaviour.
+mill_saws: 1
+
+# Hardwood and task targeting (v4, unit 1g step c). pick_hw_task_bonus is added per hardwood piece
+# in a cutting area (up to the hardwood still wanted for held tasks plus the fewest hardwood slots
+# on an offered card, if the seat can take one) in the hidden pick; 0 = v2. task_rank: premium
+# ranks the cards that pass the take gate by reward - sale value of the pieces at their required
+# drying stage (premium_piece: divided by the piece count) instead of by net; base = v2.
+pick_hw_task_bonus: 0.0
+task_rank: premium
+
+# Winter bonus disk (R-065, v4). v2 took softwood every time. Every task card needs milled hardwood,
+# but always taking hardwood lost ~$2 a game (A/B 2026-11-12: win 0.438 vs v2), so hardwood_if_task
+# takes it only while held tasks still need hardwood; otherwise the lookahead chooses (softwood).
+# Other values: hardwood (always), softwood, firewood. Remove the key to let the lookahead choose.
+bonus_kind: hardwood_if_task
+
+# Own-turn solver (unit 5b). enabled: 1 uses it in W1-W7. beam: states kept per level once a level
+# is too wide (all sequences are covered while none is). node_cap: actions applied per decision.
+# phases: wood-work phases the solver plays. W5 (tasks, joinery) and W7 (drying) stay with the v4
+# pipeline: the one-turn leaf value credits neither task placement nor drying entry. W6 sells only
+# what the pipeline's reserve (task and joinery pieces) leaves unreserved, at every search node.
+# max_depth: own actions looked ahead (a longer turn is scored where it stands).
+solver:
+  enabled: 1
+  beam: 8
+  node_cap: 150
+  max_depth: 8
+  phases: [W1, W2, W3, W4, W6]

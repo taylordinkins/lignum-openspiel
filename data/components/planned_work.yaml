@@ -1,0 +1,49 @@
+# Lignum planned-work card data (RULES_SPEC R-005, R-087..R-099). Card values live only here.
+# Seasons transcribed by eye from the official art in third_party/art/planned_work/ (ludex.dev): the
+# coloured circles at the bottom (S green = spring, S yellow = summer, F red = fall, W blue = winter;
+# the Drying card prints German letters F/S/H = Fruehling/Sommer/Herbst, read as spring/summer/fall).
+# Numeric parameters are the numbers named in R-090..R-099 and the player aid. The plan cost is not
+# printed on a card (R-088: $1 per token already on it), so it is not stored here.
+# Behaviour stays in the spec; params only name the numbers.
+
+planned_work:
+  - id: pw_trade
+    name: Trade
+    seasons: [spring, summer, fall]
+    params: {price_per_equipment: 2}
+  - id: pw_craftwork
+    name: Craftwork
+    seasons: [spring, summer, fall]
+    params: {set_prices: {2: 5, 3: 8, 4: 11}}
+  - id: pw_sawing
+    name: Sawing
+    seasons: [spring, summer, fall, winter]
+    params: {disks_per_saw: 2}
+  - id: pw_food_supply
+    name: Food Supply
+    seasons: [spring, summer, fall]
+    params: {food_per_river_piece: 2}
+  - id: pw_heating_supply
+    name: Heating Supply
+    seasons: [spring, summer, fall, winter]
+    params: {logs_per_firewood_disk: 6}
+  - id: pw_hut_construction
+    name: Hut Construction
+    seasons: [spring, summer, fall]
+    params: {tokens_needed: 2}
+  - id: pw_drying
+    name: Drying
+    seasons: [spring, summer, fall]
+    params: {first_area_capacity_multiplier: 2}
+  - id: pw_overtime
+    name: Overtime
+    seasons: [spring, summer, fall, winter]
+    params: {hardwood_disks: 1}
+  - id: pw_log_driving
+    name: Log Driving
+    seasons: [spring, summer, fall]
+    params: {max_pieces: 3}
+  - id: pw_cutting
+    name: Cutting
+    seasons: [spring, summer, fall]
+    params: {extra_woodcutters: 2, workers_moved: 2}

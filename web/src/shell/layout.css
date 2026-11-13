@@ -1,0 +1,71 @@
+/* Game screen layout: one desktop viewport, tabs below 900px. */
+body { margin: 0; }
+main { padding: 0 8px; }
+main h1 { font-size: 1.15rem; margin: 0.25em 0; }
+.lg-screen { --lg-accent: #d99a00; --lg-top: 5.5rem; }
+.lg-screen p { margin: 0.25em 0; }
+.lg-topbar { display: flex; flex-wrap: wrap; gap: 0.4em 0.8em; align-items: center; font-size: 0.85rem; }
+.lg-topbar [role="toolbar"] { display: flex; flex-wrap: wrap; gap: 0.3em; align-items: center; }
+.lg-topbar button { font-size: 0.8rem; padding: 0.05em 0.5em; }
+.lg-topbar { font-size: 0.8rem; }
+.lg-topbar .lg-status-line { margin: 0; }
+
+.lg-tabs { display: none; gap: 0.3em; margin: 0.4em 0; }
+.lg-tabs button { flex: 1; padding: 0.5em; font-size: 1rem; border: 2px solid #9b7f4b; background: transparent; color: inherit; border-radius: 8px; cursor: pointer; }
+.lg-tabs button[aria-selected="true"] { background: var(--lg-accent); color: #1c1608; border-color: var(--lg-accent); font-weight: 700; }
+
+.lg-grid { display: grid; grid-template-columns: minmax(0, 1fr) 20rem; grid-template-rows: minmax(0, 1fr); gap: 10px; align-items: stretch; flex: 1 1 0; min-height: 0; }
+.lg-pane-board { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+.lg-side { display: flex; flex-direction: column; gap: 8px; min-width: 0; min-height: 0; overflow-y: auto; }
+/* Desktop: the game screen is exactly one viewport tall; panes scroll inside, the page never does. */
+@media (min-width: 900px) {
+  main:has(> .lg-screen) { height: 100vh; height: 100dvh; box-sizing: border-box; display: flex; flex-direction: column; overflow: hidden; }
+  main:has(> .lg-screen) > h1 { font-size: 0.95rem; margin: 0.1em 0; }
+  .lg-screen { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; }
+}
+.lg-log { display: flex; flex-direction: column; min-height: 5rem; flex: 1 1 5rem; }
+.lg-log h3 { margin: 0.2em 0; font-size: 0.95rem; }
+.lg-log ol { overflow: auto; flex: 1; min-height: 0; margin: 0; padding-left: 1.4em; }
+
+.lg-move { border: 3px solid var(--lg-accent); border-radius: 12px; padding: 8px 10px; background: rgba(217, 154, 0, 0.12); box-shadow: 0 0 0 3px rgba(217, 154, 0, 0.25); }
+.lg-move h2 { margin: 0; font-size: 1.15rem; }
+.lg-move .lg-move-sub { margin: 0 0 6px; font-size: 0.85rem; opacity: 0.8; }
+.lg-move[data-state="waiting"] { border: 2px dashed #9b7f4b; background: transparent; box-shadow: none; opacity: 0.75; }
+.lg-move[data-state="waiting"] h2 { font-size: 1rem; font-weight: 500; }
+.lg-actions { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.lg-actions li { margin: 0; }
+.lg-actions button { font: inherit; font-size: 0.9rem; padding: 4px 10px; border-radius: 8px; border: 2px solid #9b7f4b; background: var(--card, #f7efdc); color: #2b2312; cursor: pointer; }
+.lg-actions button:hover:not(:disabled), .lg-actions button:focus-visible { border-color: var(--lg-accent); outline: 2px solid var(--lg-accent); }
+.lg-actions button:disabled { opacity: 0.5; cursor: default; }
+.lg-kind { margin: 0.4em 0 0.2em; font-size: 0.85rem; text-transform: capitalize; opacity: 0.8; }
+.lg-actions-sep { flex-basis: 100%; height: 0; margin: 0; padding: 0; }
+
+@media (max-width: 899px) {
+  .lg-tabs { display: flex; }
+  .lg-grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+  .lg-side { max-height: none; overflow: visible; display: contents; }
+  .lg-screen[data-tab="play"] .lg-pane-board,
+  .lg-screen[data-tab="play"] .lg-pane-log,
+  .lg-screen[data-tab="board"] .lg-pane-play,
+  .lg-screen[data-tab="board"] .lg-pane-log,
+  .lg-screen[data-tab="log"] .lg-pane-play,
+  .lg-screen[data-tab="log"] .lg-pane-board { display: none; }
+  .lg-pane-play { display: flex; flex-direction: column; gap: 8px; }
+  .lg-log ol { max-height: none; }
+}
+
+.lg-textboard h3 { margin: 0.8em 0 0.3em; }
+.lg-table-wrap { overflow-x: auto; }
+.lg-table { border-collapse: collapse; font-size: 0.85rem; }
+.lg-table th, .lg-table td { border: 1px solid #9b7f4b; padding: 2px 8px; text-align: left; }
+.lg-dl { margin: 0; }
+.lg-dl-row { display: flex; gap: 0.5em; }
+.lg-dl dt { font-weight: bold; min-width: 10em; }
+.lg-dl dd { margin: 0; }
+.lg-curtain { position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; background: #2b2312; color: #f7efdc; font-size: 1.6rem; }
+.lg-curtain button { font: inherit; font-size: 1.1rem; padding: 8px 20px; }
+.lg-move .lg-move-hint { margin: 0 0 4px; font-size: 0.75rem; opacity: 0.7; }
+.lg-move .lg-actions button { padding: 1px 6px; font-size: 0.8rem; }
+.lg-actionlog { font-size: 0.85rem; line-height: 1.35; }
+.lg-actionlog > li { padding: 1px 4px; border-bottom: 1px solid #8883; }
+.lg-actionlog > li[aria-current="step"] { background: #ffd24a55; border-left: 3px solid #d99a00; font-weight: 600; }

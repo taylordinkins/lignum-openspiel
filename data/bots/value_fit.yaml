@@ -1,0 +1,1016 @@
+schema: 1
+git_sha: 02ce678
+data:
+  seed_min: 200
+  seed_max: 599
+  games: 400
+  mix:
+    heuristic-v4,heuristic-v4: 300
+    heuristic-v4,heuristic-v2: 50
+    heuristic-v2,heuristic-v4: 50
+  matchups:
+  - heuristic-v4,heuristic-v4:300
+  - heuristic-v4,heuristic-v2:100
+  every: 1
+  value_profile: heuristic-v4
+  collector_git_sha: 02ce67847398627bf75605e70f24b65b40ef2edb
+split:
+  val_fraction: 0.2
+  split_seed: 0
+  train_games: 320
+  val_games: 80
+  train_rows: 300138
+  val_rows: 75042
+game_params:
+  players: 2
+  joinery: true
+  easy_winter: false
+model:
+  kind: ridge
+  alpha: 10.0
+feature_names:
+- money
+- loan_level
+- loan_repay
+- joiners
+- food
+- store
+- sale_unmilled_f
+- sale_unmilled_s
+- sale_unmilled_h
+- sale_logs_f
+- sale_logs_s
+- sale_logs_h
+- dry_unmilled_f
+- dry_unmilled_s
+- dry_unmilled_h
+- dry_logs_f
+- dry_logs_s
+- dry_logs_h
+- woodpile_f
+- woodpile_s
+- woodpile_h
+- sawing_f
+- sawing_s
+- sawing_h
+- river_f
+- river_s
+- river_h
+- joinery_covered
+- joinery_uncovered
+- tasks_held
+- tasks_complete
+- task_reward_held
+- task_reward_complete
+- task_reward_progress
+- office
+- craft_tokens
+- craft_jokers
+- plans_live
+- buildings
+- winters_ahead
+- rounds_to_winter
+- winter_shortfall
+- opp_money
+- opp_loan_repay
+- round
+components:
+  wood_sales:
+    intercept: 21.280967635790795
+    coef:
+      money: -0.1215311679486079
+      loan_level: 6.657391943738156
+      loan_repay: -0.862320199019637
+      joiners: 3.538730566363685
+      food: -0.889709811395267
+      store: 0.1612906528846102
+      sale_unmilled_f: 1.633662640575159
+      sale_unmilled_s: 1.225675875697309
+      sale_logs_f: -0.1917154939014488
+      sale_logs_s: -0.9557033110920644
+      sale_logs_h: -1.1832929691572331
+      dry_unmilled_f: 0.5787892452046132
+      dry_logs_f: 0.9867181124998123
+      dry_logs_s: -1.1583579703553422
+      dry_logs_h: -0.08865057212871198
+      woodpile_f: 0.2584074890000284
+      woodpile_s: 1.121064680106618
+      woodpile_h: 0.9540035943635722
+      sawing_f: 1.0957275707399459
+      sawing_s: 0.6420822271078428
+      sawing_h: 0.8281569576676586
+      river_f: 1.1638546094409634
+      river_s: 1.58150582708109
+      river_h: 4.188945381442758
+      joinery_covered: -0.5433806939668835
+      tasks_held: -0.20596788178196715
+      tasks_complete: 4.939310239395513
+      task_reward_held: -0.04423559353728957
+      task_reward_complete: -0.2852021396322835
+      task_reward_progress: -0.13346470881935432
+      office: 0.5546178983931281
+      craft_tokens: -0.03899479756331596
+      craft_jokers: 0.7655312371437363
+      plans_live: 0.803610136636408
+      buildings: -1.8450310992884427
+      winters_ahead: 10.33181015191651
+      rounds_to_winter: 2.4360140526548886
+      winter_shortfall: -0.2750863912146699
+      opp_money: -0.05985329484431511
+      opp_loan_repay: -0.07516517438874973
+      round: -2.4247533057126995
+  joinery:
+    intercept: 2.376938220796271
+    coef:
+      money: 0.011387645785319287
+      loan_level: -0.7102756415149206
+      loan_repay: 0.0707788541414292
+      joiners: 0.5132428694005441
+      food: -0.12206952650127438
+      store: 0.09416654387633244
+      sale_unmilled_f: -0.08978816376609347
+      sale_unmilled_s: -0.15440303606482406
+      sale_logs_f: 0.5972647359290723
+      sale_logs_s: 0.8670250739235212
+      sale_logs_h: 2.1908344044189794
+      dry_unmilled_f: 2.965262761900925
+      dry_logs_f: 2.6305736419698387
+      dry_logs_s: 3.3641501538306797
+      dry_logs_h: 5.172190994332842
+      woodpile_f: -0.06945455062149933
+      woodpile_s: -0.07942124902939134
+      woodpile_h: 0.12046884355315665
+      sawing_f: 0.22574976969247124
+      sawing_s: 0.4272606721137076
+      sawing_h: 0.6981708253961125
+      river_f: -0.03114076533382275
+      river_s: -0.1993566192201918
+      river_h: 1.0184821021156494
+      joinery_covered: 5.243152310708443
+      tasks_held: -2.180035318570291
+      tasks_complete: 0.37592234822378057
+      task_reward_held: 0.05751424403578134
+      task_reward_complete: 0.17141272252929182
+      task_reward_progress: -0.12611297470023622
+      office: 0.0399477122285989
+      craft_tokens: -0.08274616120795401
+      craft_jokers: 0.10131552746811395
+      plans_live: 0.2774445865874285
+      buildings: -0.4197654959649179
+      winters_ahead: 1.0816080447809033
+      rounds_to_winter: 0.4826269032414592
+      winter_shortfall: -0.03727753713510486
+      opp_money: -0.033289050558327773
+      opp_loan_repay: 0.0025067182551635698
+      round: -0.2922642663718775
+  tasks:
+    intercept: -0.3870610835499484
+    coef:
+      money: -0.020266469075221973
+      loan_level: -0.5083743420280112
+      loan_repay: 0.11202285854822705
+      joiners: 0.868329065003617
+      food: -0.099698717169472
+      store: 0.06868359735482994
+      sale_unmilled_f: -0.1723667792695517
+      sale_unmilled_s: -0.18482198380212478
+      sale_logs_f: 0.5632265623751075
+      sale_logs_s: 0.7445424082641754
+      sale_logs_h: 1.6009210354676797
+      dry_unmilled_f: -3.2919394598621494
+      dry_logs_f: 1.4179163905740209
+      dry_logs_s: 1.7366534573081767
+      dry_logs_h: 2.1405545013424274
+      woodpile_f: -0.03614075220330212
+      woodpile_s: 0.06954091408741822
+      woodpile_h: 0.19100565655576307
+      sawing_f: -0.24843419087639756
+      sawing_s: 0.22596082176878157
+      sawing_h: 0.8022526999710352
+      river_f: -0.2249875057666773
+      river_s: 0.11858901149167793
+      river_h: 1.0035307296586555
+      joinery_covered: -0.2133168571677087
+      tasks_held: 9.446877333714644
+      tasks_complete: -10.26408354273666
+      task_reward_held: -0.3409775145756565
+      task_reward_complete: 0.3281667287127696
+      task_reward_progress: 1.04873638159167
+      office: -0.3951598901141433
+      craft_tokens: -0.013097528707355604
+      craft_jokers: 0.06122684280281789
+      plans_live: 0.15812605875290456
+      buildings: -0.3324458285642104
+      winters_ahead: 1.4536672566054192
+      rounds_to_winter: 0.3429196528108635
+      winter_shortfall: -0.012914896383742967
+      opp_money: -0.02118600842008139
+      opp_loan_repay: 0.0022574255231450685
+      round: -0.3411883146039453
+  office:
+    intercept: 0.06102569208916471
+    coef:
+      money: -0.0005419243041582842
+      loan_level: 0.12304258557966581
+      loan_repay: -0.0172336804857664
+      joiners: 0.023989592158464048
+      food: -0.005036224749036065
+      store: 0.0004994560171888622
+      sale_unmilled_f: -0.005245391475473499
+      sale_unmilled_s: -0.02247145895742836
+      sale_logs_f: 0.01212537883716639
+      sale_logs_s: 0.01457851158176397
+      sale_logs_h: 0.056005365647232165
+      dry_unmilled_f: 0.49653212458939433
+      dry_logs_f: -0.009188998922244113
+      dry_logs_s: 0.02473288860882724
+      dry_logs_h: 0.005053218463897633
+      woodpile_f: -0.004025675889964337
+      woodpile_s: -0.006886742685489523
+      woodpile_h: 0.016523381724796782
+      sawing_f: 0.0008837966548574043
+      sawing_s: -0.020858312858946106
+      sawing_h: 0.03769886187296322
+      river_f: -0.0006128276561861907
+      river_s: -0.007184192083667362
+      river_h: 0.07180194228729857
+      joinery_covered: -0.005324836075006436
+      tasks_held: 0.22511802843731368
+      tasks_complete: -0.35110978642770224
+      task_reward_held: 0.0014273616133602114
+      task_reward_complete: 0.020993411548840445
+      task_reward_progress: 0.0038495297192200277
+      office: 0.30331451661577263
+      craft_tokens: 0.000681165313690918
+      craft_jokers: 0.0013657991512910086
+      plans_live: 0.010011257857380808
+      buildings: -0.0560669889474679
+      winters_ahead: 0.032966548007046126
+      rounds_to_winter: 0.002582846410505086
+      winter_shortfall: -0.0008487791640815015
+      opp_money: -0.0006282596141656767
+      opp_loan_repay: 0.0005525682920216583
+      round: -0.0068607147726453864
+  craftwork:
+    intercept: 1.729954375299401
+    coef:
+      money: 0.020170164589664856
+      loan_level: -0.7914180208085754
+      loan_repay: 0.10874985920473874
+      joiners: 0.18918865826055165
+      food: -0.10031490598385034
+      store: -0.002731364254968652
+      sale_unmilled_f: -0.03909557556488279
+      sale_unmilled_s: -0.12272716126181632
+      sale_logs_f: -0.19797827930288772
+      sale_logs_s: -0.16979485475493766
+      sale_logs_h: -0.4035195114125876
+      dry_unmilled_f: -0.6282645570257784
+      dry_logs_f: -0.10576743982796823
+      dry_logs_s: -0.22447171642399424
+      dry_logs_h: -0.07490006553737687
+      woodpile_f: 0.03230939923958464
+      woodpile_s: -0.014368553929806308
+      woodpile_h: -0.11905850713262459
+      sawing_f: -0.09814581699927322
+      sawing_s: -0.11328657373863667
+      sawing_h: -0.09486577862248144
+      river_f: 0.004536267614596723
+      river_s: -0.07555508617385485
+      river_h: 0.5404385867803734
+      joinery_covered: -0.05233609868585051
+      tasks_held: -0.3171214197789753
+      tasks_complete: -0.31188543699545584
+      task_reward_held: 0.014400358598086287
+      task_reward_complete: 0.03348120078321239
+      task_reward_progress: -0.028757666884406265
+      office: 0.15768714260500172
+      craft_tokens: 0.8086845874336182
+      craft_jokers: 1.1371589332365786
+      plans_live: 0.17119964818138744
+      buildings: -0.5516416556112187
+      winters_ahead: 2.140518829294512
+      rounds_to_winter: 0.37093275874637743
+      winter_shortfall: 0.012158749694316412
+      opp_money: -0.0012126921076841546
+      opp_loan_repay: 0.000260686948638573
+      round: -0.47977452253091607
+  winter:
+    intercept: 4.206150936545596
+    coef:
+      money: 0.026055030867390708
+      loan_level: 0.5460254085634336
+      loan_repay: -0.04589631052661044
+      joiners: 0.5763216606532587
+      food: -0.07610555576602156
+      store: -0.16909931915981422
+      sale_unmilled_f: -0.11139160462007956
+      sale_unmilled_s: -0.13905252687731176
+      sale_logs_f: 0.10669477791119271
+      sale_logs_s: -0.22103632539661136
+      sale_logs_h: -1.1486469161404758
+      dry_unmilled_f: -0.3824088928356535
+      dry_logs_f: 0.47855099605913015
+      dry_logs_s: -0.28837738369499993
+      dry_logs_h: -1.0244076041841201
+      woodpile_f: -0.10123155670926046
+      woodpile_s: -0.24559818674188413
+      woodpile_h: -0.5330078149759087
+      sawing_f: -0.006133020869214858
+      sawing_s: -0.6601393747056268
+      sawing_h: -1.3802295985642061
+      river_f: -0.11998305294153863
+      river_s: -0.10427832260096745
+      river_h: -1.6690540940508047
+      joinery_covered: 0.09245789877791773
+      tasks_held: -2.014096313382446
+      tasks_complete: 1.8995249272718313
+      task_reward_held: 0.10292520579393473
+      task_reward_complete: -0.09926206311229774
+      task_reward_progress: -0.007791435535165475
+      office: 0.08597981476371773
+      craft_tokens: 0.012762367710174985
+      craft_jokers: 0.752580167188098
+      plans_live: 0.27735382845170037
+      buildings: -0.9877812324559816
+      winters_ahead: 0.4012711208923144
+      rounds_to_winter: 0.7062562336944387
+      winter_shortfall: -0.14161928454095427
+      opp_money: -0.012781509672963839
+      opp_loan_repay: -0.012792347441750347
+      round: -0.19742883012050072
+  loan_repayment:
+    intercept: 4.755295089613236
+    coef:
+      money: 0.07970585059639976
+      loan_level: -0.2849545253273757
+      loan_repay: -0.8851926472410618
+      joiners: 1.0928959130958906
+      food: -0.20886823042430433
+      store: -0.23363682445730255
+      sale_unmilled_f: -0.1721241470097747
+      sale_unmilled_s: -0.10724281632374996
+      sale_logs_f: -0.01627395175457482
+      sale_logs_s: -0.024124692295128362
+      sale_logs_h: -0.5810699927702984
+      dry_unmilled_f: 1.1374079607156307
+      dry_logs_f: 0.08984911886484177
+      dry_logs_s: -0.03269418098443499
+      dry_logs_h: -0.2920298918417057
+      woodpile_f: -0.10968015639603346
+      woodpile_s: -0.09170898957138834
+      woodpile_h: -0.14229743707790582
+      sawing_f: 0.07416003876892414
+      sawing_s: 0.021852989403801978
+      sawing_h: -0.20607699425674394
+      river_f: 0.013097141974881975
+      river_s: 0.08973676325826808
+      river_h: -0.9235252275397378
+      joinery_covered: 0.2160036331709958
+      tasks_held: -0.4302341059621162
+      tasks_complete: 0.9786914692885801
+      task_reward_held: 0.010005149545956419
+      task_reward_complete: -0.040718848202079654
+      task_reward_progress: 0.00255017115290757
+      office: 0.16829587169415516
+      craft_tokens: -0.05997220101906516
+      craft_jokers: 1.1120747646571225
+      plans_live: 0.3173082331878108
+      buildings: -1.358633348080561
+      winters_ahead: 0.7356864081187209
+      rounds_to_winter: 0.8272795734542515
+      winter_shortfall: -0.18547106268289454
+      opp_money: -0.04432922164805018
+      opp_loan_repay: -0.0022212840297870544
+      round: -0.28303202251293924
+  rest:
+    intercept: -7.242394937330661
+    coef:
+      money: -0.18377365631625475
+      loan_level: -1.6263419085477075
+      loan_repay: 0.17172820255630325
+      joiners: -1.9038157747445148
+      food: 0.6654728305391718
+      store: -0.11448175476161564
+      sale_unmilled_f: -0.19265340050089477
+      sale_unmilled_s: 0.1929329183334928
+      sale_logs_f: 0.05622490179209599
+      sale_logs_s: 0.012198064314378736
+      sale_logs_h: 0.5419206723422727
+      dry_unmilled_f: -0.36597595297797125
+      dry_logs_f: -0.1779019453919648
+      dry_logs_s: 0.17059221271564173
+      dry_logs_h: 0.0021376035309754074
+      woodpile_f: 0.04097875327734193
+      woodpile_s: -0.0008031797940667587
+      woodpile_h: -0.04942872576838582
+      sawing_f: -0.5474707069217495
+      sawing_s: -0.8458363173301943
+      sawing_h: 0.020487230955301746
+      river_f: 0.27379419521883924
+      river_s: 0.48641467372767494
+      river_h: -1.4742672135209833
+      joinery_covered: 0.20539506053866027
+      tasks_held: -0.18777991238166045
+      tasks_complete: -1.1798911545722774
+      task_reward_held: 0.025896224779731587
+      task_reward_complete: 0.037345142465543234
+      task_reward_progress: 0.024274963174063528
+      office: -0.6316293341744443
+      craft_tokens: -0.06488991944199862
+      craft_jokers: -1.4624750917518592
+      plans_live: -0.42844029947685974
+      buildings: 1.7937883775444337
+      winters_ahead: -3.25880739922642
+      rounds_to_winter: -1.1706177110607872
+      winter_shortfall: 0.06035141296570176
+      opp_money: 0.04872688155651662
+      opp_loan_repay: 0.010332752436645925
+      round: 0.8327116161928012
+held_out:
+  overall:
+    rows: 75042
+    wood_sales:
+      fit:
+        rmse: 8.947626900902279
+        mae: 6.867351957457814
+      hand:
+        rmse: 19.39199587830881
+        mae: 16.13229524799446
+    joinery:
+      fit:
+        rmse: 2.7441008950800208
+        mae: 2.1569532566718173
+      hand:
+        rmse: 3.923524691002487
+        mae: 2.4342634791183606
+    tasks:
+      fit:
+        rmse: 4.1812348567775235
+        mae: 2.623894382432164
+      hand:
+        rmse: 4.270454550135009
+        mae: 1.3664467338290558
+    office:
+      fit:
+        rmse: 0.227217374665992
+        mae: 0.14281069495138887
+      hand:
+        rmse: 0.21642651413931258
+        mae: 0.04684043602249407
+    craftwork:
+      fit:
+        rmse: 2.1913581027228743
+        mae: 1.5703634373115638
+      hand:
+        rmse: 5.169246177856128
+        mae: 3.9270728392100427
+    winter:
+      fit:
+        rmse: 4.088395473211312
+        mae: 2.677016031573029
+      hand:
+        rmse: 26.783653117962974
+        mae: 20.97899276405213
+    loan_repayment:
+      fit:
+        rmse: 4.784928090533925
+        mae: 3.5144471295048163
+      hand:
+        rmse: 6.466438254458842
+        mae: 2.978412089230031
+    rest:
+      fit:
+        rmse: 5.787920231494826
+        mae: 4.2043898794504635
+      hand:
+        rmse: 17.60221105844977
+        mae: 15.725320487193837
+    total:
+      fit:
+        rmse: 11.576041729627446
+        mae: 8.881290399415688
+      hand:
+        rmse: 34.388508565858885
+        mae: 26.275041352842408
+  by_round:
+    1:
+      rows: 12432
+      wood_sales:
+        fit:
+          rmse: 9.937787114851314
+          mae: 7.580004144368019
+        hand:
+          rmse: 27.442872392913703
+          mae: 25.622184684684683
+      joinery:
+        fit:
+          rmse: 3.0707123860949848
+          mae: 2.5999721062453376
+        hand:
+          rmse: 3.9604910125499666
+          mae: 2.496943371943372
+      tasks:
+        fit:
+          rmse: 4.46823974283104
+          mae: 3.0711716697296088
+        hand:
+          rmse: 4.60580078823443
+          mae: 1.373632561132561
+      office:
+        fit:
+          rmse: 0.2385128678030897
+          mae: 0.1241045656175312
+        hand:
+          rmse: 0.26224822453952146
+          mae: 0.06877413127413128
+      craftwork:
+        fit:
+          rmse: 2.7857543685798603
+          mae: 2.0711277195443065
+        hand:
+          rmse: 8.201651550729776
+          mae: 7.707062419562421
+      winter:
+        fit:
+          rmse: 5.611115050175306
+          mae: 4.117896359226505
+        hand:
+          rmse: 47.498763500065465
+          mae: 46.624310247747744
+      loan_repayment:
+        fit:
+          rmse: 6.705519173989704
+          mae: 6.021442139990737
+        hand:
+          rmse: 9.293339112835163
+          mae: 6.180823680823681
+      rest:
+        fit:
+          rmse: 7.483542338887022
+          mae: 5.800323315365298
+        hand:
+          rmse: 17.686714223919886
+          mae: 15.966055341055341
+      total:
+        fit:
+          rmse: 13.944000881867792
+          mae: 11.111077005123063
+        hand:
+          rmse: 63.93622640054777
+          mae: 61.98130831724582
+    2:
+      rows: 10674
+      wood_sales:
+        fit:
+          rmse: 9.691148666326427
+          mae: 7.306112406567163
+        hand:
+          rmse: 25.50443898803569
+          mae: 23.716394978452314
+      joinery:
+        fit:
+          rmse: 3.09767179828983
+          mae: 2.6036626546122306
+        hand:
+          rmse: 4.018821654086238
+          mae: 2.5520891886827806
+      tasks:
+        fit:
+          rmse: 4.411923321289268
+          mae: 2.978753970334381
+        hand:
+          rmse: 4.585878416928543
+          mae: 1.3624716507401162
+      office:
+        fit:
+          rmse: 0.23005045657980583
+          mae: 0.12598409207748337
+        hand:
+          rmse: 0.26613212304041134
+          mae: 0.07082630691399663
+      craftwork:
+        fit:
+          rmse: 2.683067240834679
+          mae: 1.9788407410204754
+        hand:
+          rmse: 7.182799077359906
+          mae: 6.61109237399288
+      winter:
+        fit:
+          rmse: 5.596108266726002
+          mae: 4.054242808790607
+        hand:
+          rmse: 33.26026159028162
+          mae: 32.13903410155518
+      loan_repayment:
+        fit:
+          rmse: 6.579885165064039
+          mae: 5.897831946489357
+        hand:
+          rmse: 9.253573921283458
+          mae: 6.136780963087877
+      rest:
+        fit:
+          rmse: 7.156687369201232
+          mae: 5.572923371809641
+        hand:
+          rmse: 21.02777947946447
+          mae: 19.491661982387107
+      total:
+        fit:
+          rmse: 13.687562994531033
+          mae: 10.886518434229737
+        hand:
+          rmse: 43.357664027707294
+          mae: 40.75018478545999
+    3:
+      rows: 8616
+      wood_sales:
+        fit:
+          rmse: 9.7426330869889
+          mae: 7.7149148839789525
+        hand:
+          rmse: 24.07971142520738
+          mae: 22.264948932219127
+      joinery:
+        fit:
+          rmse: 3.1248569576309624
+          mae: 2.5324692749674003
+        hand:
+          rmse: 4.017588420071414
+          mae: 2.5442200557103063
+      tasks:
+        fit:
+          rmse: 4.332352155151837
+          mae: 2.8107634361328246
+        hand:
+          rmse: 4.539577483642397
+          mae: 1.3653114670380688
+      office:
+        fit:
+          rmse: 0.2241205682754632
+          mae: 0.12401862972626304
+        hand:
+          rmse: 0.2569823451515521
+          mae: 0.06603992571959146
+      craftwork:
+        fit:
+          rmse: 2.5495395793473152
+          mae: 1.8812540882798574
+        hand:
+          rmse: 5.726971973490347
+          mae: 5.085097493036211
+      winter:
+        fit:
+          rmse: 5.372969240132154
+          mae: 3.857483646222115
+        hand:
+          rmse: 23.11419186903303
+          mae: 21.69571436861653
+      loan_repayment:
+        fit:
+          rmse: 6.446437941936535
+          mae: 5.747945272748018
+        hand:
+          rmse: 9.267621675136686
+          mae: 6.107474466109563
+      rest:
+        fit:
+          rmse: 7.060890970367681
+          mae: 5.620856338577735
+        hand:
+          rmse: 21.502800178256674
+          mae: 20.148444753946148
+      total:
+        fit:
+          rmse: 13.477815832839866
+          mae: 10.641758430119028
+        hand:
+          rmse: 29.553755912990198
+          mae: 26.898066689879293
+    4:
+      rows: 2890
+      wood_sales:
+        fit:
+          rmse: 10.40404187169053
+          mae: 8.672196943822039
+        hand:
+          rmse: 18.75978203885452
+          mae: 16.90314878892734
+      joinery:
+        fit:
+          rmse: 2.9758323845923704
+          mae: 2.3784696118504254
+        hand:
+          rmse: 3.966424832460221
+          mae: 2.504152249134948
+      tasks:
+        fit:
+          rmse: 4.352827826516399
+          mae: 2.5711905177856007
+        hand:
+          rmse: 4.557445344074724
+          mae: 1.3289098269896193
+      office:
+        fit:
+          rmse: 0.23527827724288422
+          mae: 0.13410358317919863
+        hand:
+          rmse: 0.2759068094013782
+          mae: 0.07612456747404844
+      craftwork:
+        fit:
+          rmse: 2.5179884348608668
+          mae: 1.7958572298354176
+        hand:
+          rmse: 5.301496818079846
+          mae: 4.643944636678201
+      winter:
+        fit:
+          rmse: 5.954285747041708
+          mae: 4.470293967320177
+        hand:
+          rmse: 18.74439217754303
+          mae: 17.18260380622837
+      loan_repayment:
+        fit:
+          rmse: 6.33246352382648
+          mae: 5.780271578706512
+        hand:
+          rmse: 8.868961467311182
+          mae: 5.585121107266436
+      rest:
+        fit:
+          rmse: 7.058655627601493
+          mae: 5.757698073238996
+        hand:
+          rmse: 21.612568431050743
+          mae: 20.366782006920417
+      total:
+        fit:
+          rmse: 14.177021154320888
+          mae: 11.787106137676341
+        hand:
+          rmse: 19.69992778714058
+          mae: 17.1750430449827
+    5:
+      rows: 10876
+      wood_sales:
+        fit:
+          rmse: 9.698229614635032
+          mae: 7.558684201824457
+        hand:
+          rmse: 15.627486988542028
+          mae: 13.992046708348658
+      joinery:
+        fit:
+          rmse: 2.83089649340429
+          mae: 2.305036691474993
+        hand:
+          rmse: 4.031813082732558
+          mae: 2.5810040456050016
+      tasks:
+        fit:
+          rmse: 4.38832119027042
+          mae: 2.57680527591863
+        hand:
+          rmse: 4.5575201655141
+          mae: 1.4639843692534023
+      office:
+        fit:
+          rmse: 0.22991950692131055
+          mae: 0.1408049332238883
+        hand:
+          rmse: 0.2509635715261758
+          mae: 0.06298271423317396
+      craftwork:
+        fit:
+          rmse: 2.174356808264403
+          mae: 1.5866533195835886
+        hand:
+          rmse: 3.9245977907361564
+          mae: 3.2570614196395735
+      winter:
+        fit:
+          rmse: 2.198534341266511
+          mae: 1.626592038166648
+        hand:
+          rmse: 21.51298357562947
+          mae: 20.02132677454947
+      loan_repayment:
+        fit:
+          rmse: 2.5660225918687907
+          mae: 1.7864763061224507
+        hand:
+          rmse: 2.114113069670059
+          mae: 0.30323648400147113
+      rest:
+        fit:
+          rmse: 5.844549881656926
+          mae: 4.485668664599354
+        hand:
+          rmse: 22.033198124711607
+          mae: 21.195430305259286
+      total:
+        fit:
+          rmse: 11.271654191160122
+          mae: 8.836600294554813
+        hand:
+          rmse: 20.982307882591165
+          mae: 18.424289757263697
+    6:
+      rows: 13850
+      wood_sales:
+        fit:
+          rmse: 8.630137826107426
+          mae: 6.821565067362209
+        hand:
+          rmse: 12.271729684868541
+          mae: 10.404296028880866
+      joinery:
+        fit:
+          rmse: 2.6355433246161253
+          mae: 1.960222313950255
+        hand:
+          rmse: 3.951885717226861
+          mae: 2.4457039711191335
+      tasks:
+        fit:
+          rmse: 4.174380449189165
+          mae: 2.3875226023949363
+        hand:
+          rmse: 4.1629978031675225
+          mae: 1.5476472707581228
+      office:
+        fit:
+          rmse: 0.2256474446900947
+          mae: 0.16156522252964117
+        hand:
+          rmse: 0.16476654527067444
+          mae: 0.027148014440433212
+      craftwork:
+        fit:
+          rmse: 1.69722869209675
+          mae: 1.2950423402528484
+        hand:
+          rmse: 2.24758643111738
+          mae: 1.6811552346570398
+      winter:
+        fit:
+          rmse: 2.230229101363884
+          mae: 1.603380137624263
+        hand:
+          rmse: 14.470727476542462
+          mae: 11.414985559566786
+      loan_repayment:
+        fit:
+          rmse: 2.495354313103633
+          mae: 1.591137720502459
+        hand:
+          rmse: 2.1770877775909128
+          mae: 0.32267148014440433
+      rest:
+        fit:
+          rmse: 4.182769275493549
+          mae: 3.044503383085272
+        hand:
+          rmse: 15.056507282645155
+          mae: 14.342093862815885
+      total:
+        fit:
+          rmse: 9.657987568679061
+          mae: 7.544504351090877
+        hand:
+          rmse: 13.961716047452155
+          mae: 11.496518028880867
+    7:
+      rows: 13420
+      wood_sales:
+        fit:
+          rmse: 6.344994401422608
+          mae: 4.957564712096207
+        hand:
+          rmse: 8.240907557851209
+          mae: 6.310476900149031
+      joinery:
+        fit:
+          rmse: 1.836098632143475
+          mae: 1.3376962916827926
+        hand:
+          rmse: 3.7703348311781584
+          mae: 2.230327868852459
+      tasks:
+        fit:
+          rmse: 3.5620089480975152
+          mae: 2.197159304593916
+        hand:
+          rmse: 3.441217707093524
+          mae: 1.2093025484351714
+      office:
+        fit:
+          rmse: 0.2163143947773688
+          mae: 0.1653049043538134
+        hand:
+          rmse: 0.06343378443267882
+          mae: 0.004023845007451565
+      craftwork:
+        fit:
+          rmse: 1.2008886713422655
+          mae: 0.941535066830098
+        hand:
+          rmse: 1.0616636271569344
+          mae: 0.7974962742175858
+      winter:
+        fit:
+          rmse: 1.8738009352695046
+          mae: 1.2666423189671823
+        hand:
+          rmse: 5.492829969426082
+          mae: 2.814761549925484
+      loan_repayment:
+        fit:
+          rmse: 2.020895189239378
+          mae: 1.1222336679952758
+        hand:
+          rmse: 2.042907836690176
+          mae: 0.2819672131147541
+      rest:
+        fit:
+          rmse: 2.3521848124394396
+          mae: 1.8128876607723867
+        hand:
+          rmse: 7.761856945917147
+          mae: 7.334798807749627
+      total:
+        fit:
+          rmse: 7.494081343471344
+          mae: 5.699765881882432
+        hand:
+          rmse: 9.691244376597282
+          mae: 7.257776766020864
+    8:
+      rows: 2284
+      wood_sales:
+        fit:
+          rmse: 4.780254091606648
+          mae: 3.6637348663394618
+        hand:
+          rmse: 10.409289600279495
+          mae: 7.560157618213661
+      joinery:
+        fit:
+          rmse: 1.7623698031053197
+          mae: 1.2625495168785237
+        hand:
+          rmse: 2.914274308650362
+          mae: 1.4693520140105079
+      tasks:
+        fit:
+          rmse: 2.8407090513388638
+          mae: 2.057608456749017
+        hand:
+          rmse: 2.7984641884882704
+          mae: 0.7577721103327496
+      office:
+        fit:
+          rmse: 0.2105646260079725
+          mae: 0.16883079712514695
+        hand:
+          rmse: 0.0
+          mae: 0.0
+      craftwork:
+        fit:
+          rmse: 0.9448996410763963
+          mae: 0.7643240156350327
+        hand:
+          rmse: 0.8920351983505597
+          mae: 0.7311733800350263
+      winter:
+        fit:
+          rmse: 1.9701087627948335
+          mae: 1.4749401345128035
+        hand:
+          rmse: 2.874662090855628
+          mae: 0.6166812609457093
+      loan_repayment:
+        fit:
+          rmse: 2.134182427181849
+          mae: 1.3846250962373208
+        hand:
+          rmse: 2.345021181835559
+          mae: 0.3712784588441331
+      rest:
+        fit:
+          rmse: 2.0225726304908345
+          mae: 1.5588088888260567
+        hand:
+          rmse: 5.929533668607116
+          mae: 5.89492119089317
+      total:
+        fit:
+          rmse: 5.362087500590607
+          mae: 4.067842156503813
+        hand:
+          rmse: 14.207152347365623
+          mae: 12.177856611208405
