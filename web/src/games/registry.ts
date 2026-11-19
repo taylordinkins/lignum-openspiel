@@ -20,6 +20,8 @@ export interface GamePlugin {
   id: string;
   title: string;
   renderBoard(game: GameView, ui?: BoardUi): ReactNode;
+  /** Optional per-seat panels shown in the side column (public information only). */
+  renderSeats?(game: GameView, ui?: BoardUi): ReactNode;
   /** Whether the sole legal action on a human turn should be submitted automatically. */
   autoAdvance?(action: LegalAction, legalActions: LegalAction[]): boolean;
   phaseLabel?(game: GameView): string | undefined;

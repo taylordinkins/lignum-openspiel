@@ -506,6 +506,8 @@ export interface operations {
         parameters: {
             query?: {
                 seat?: number | null;
+                /** @description Playback frame: render the state after the first `at` raw history entries (the unit of `history_length` and `HistoryEntry.index`; one entry per action or chance outcome). Read-only; filtered for `seat` as the live view was at that state. Outside 0..history_length is 409; equal to it is the live view. */
+                at?: number | null;
             };
             header?: never;
             path: {
@@ -526,6 +528,15 @@ export interface operations {
             };
             /** @description Not Found */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflict */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };

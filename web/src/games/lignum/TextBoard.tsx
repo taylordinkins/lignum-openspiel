@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import type { GameView } from "../../shell/useGame";
 import type { BoardUi } from "../registry";
 import CutAllPanel from "./CutAllPanel";
+import SeatTile from "./SeatTile";
+import "./details.css";
 import { PICK_PHASE, type LignumSeatView, type LignumView } from "./types";
 
 /** Render any loosely typed value as plain text (never JSON). */
@@ -21,7 +23,7 @@ const seatName = (x: unknown): string =>
   typeof x === "number" ? `P${x}` : fmt(x);
 const seatList = (xs: unknown): string =>
   Array.isArray(xs) && xs.length > 0 ? xs.map(seatName).join(", ") : "-";
-const dollars = (n: number): string => (n < 0 ? `-$${-n}` : `$${n}`);
+import { dollars } from "./money";
 const arr = (x: unknown): unknown[] => (Array.isArray(x) ? x : []);
 
 function flat(x: unknown): number[] {
@@ -30,11 +32,39 @@ function flat(x: unknown): number[] {
   return [];
 }
 
-function Dl({ rows }: { rows: [string, ReactNode][] }) {
+/** A card section: eyebrow over a display-font title. */
+function Sec({
+  label,
+  eyebrow,
+  title,
+  cls = "",
+  children,
+}: {
+  label: string;
+  eyebrow: string;
+  title: string;
+  cls?: string;
+  children: ReactNode;
+}) {
   return (
-    <dl className="lg-dl">
+    <section aria-label={label} className={`card lgd-card ${cls}`.trim()}>
+      <header>
+        <span className="eyebrow">{eyebrow}</span>
+        <h3>{title}</h3>
+      </header>
+      {children}
+    </section>
+  );
+}
+
+const NUMERIC = /^-?\$?\d+(\.\d+)?(\/\d+)*$/;
+const isNum = (t: string): boolean => NUMERIC.test(t);
+
+function Dl({ rows, list }: { rows: [string, ReactNode][]; list?: boolean }) {
+  return (
+    <dl className={`lgd-dl${list ? " lgd-dl--rows" : ""}`}>
       {rows.map(([k, v]) => (
-        <div key={k} className="lg-dl-row">
+        <div key={k} className="lgd-dl-row">
           <dt>{k}</dt>
           <dd>{v}</dd>
         </div>
@@ -47,8 +77,7 @@ function Header({ v }: { v: LignumView }) {
   const mover =
     typeof v.current_player === "number" ? `P${v.current_player}` : "-";
   return (
-    <section aria-label="Overview">
-      <h3>Round {fmt(v.round)}</h3>
+    <Sec label="Overview" eyebrow="Overview" title={`Round ${fmt(v.round)}`} cls="lgd-o1">
       <Dl
         rows={[
           ["Phase", fmt(v.phase_label ?? v.phase)],
@@ -72,7 +101,7 @@ function Header({ v }: { v: LignumView }) {
           ],
         ]}
       />
-    </section>
+    </Sec>
   );
 }
 
@@ -88,21 +117,21 @@ function Areas({ v }: { v: LignumView }) {
   );
   const others = picked.filter((s) => s !== viewer);
   return (
-    <section aria-label="Cutting areas">
-      <h3>Cutting areas</h3>
-      <table className="lg-table">
+    <Sec label="Cutting areas" eyebrow="Spring" title="Cutting areas" cls="lgd-o3">
+      <div className="lgd-scroll">
+      <table className="tbl">
         <thead>
           <tr>
             <th>Area</th>
             <th>Wood</th>
-            <th>Food</th>
+            <th className="num">Food</th>
             <th>Revealed picks</th>
           </tr>
         </thead>
         <tbody>
           {[0, 1, 2, 3, 4, 5].map((a) => {
             const by = picks.flatMap((p, seat) =>
-              flat(p).includes(a) ? [`P${seat}`] : [],
+              flat(p).includes(a) ? [seat] : [],
             );
             return (
               <tr key={a}>
@@ -111,13 +140,24 @@ function Areas({ v }: { v: LignumView }) {
                   {high.includes(a) ? " (high)" : ""}
                 </th>
                 <td>{fmt(wood[a])}</td>
-                <td>{fmt(food[a])}</td>
-                <td>{by.join(", ") || "-"}</td>
+                <td className="num">{fmt(food[a])}</td>
+                <td>
+                  {by.length === 0 ? (
+                    "-"
+                  ) : (
+                    <span className="lgd-tiles">
+                      {by.map((seat) => (
+                        <SeatTile key={seat} seat={seat} />
+                      ))}
+                    </span>
+                  )}
+                </td>
               </tr>
             );
           })}
         </tbody>
       </table>
+      </div>
       {typeof own === "number" && <p>Your hidden pick: area {own + 1}</p>}
       {v.phase === PICK_PHASE && (
         <p>
@@ -126,7 +166,7 @@ function Areas({ v }: { v: LignumView }) {
             : "No other seat has picked yet"}
         </p>
       )}
-    </section>
+    </Sec>
   );
 }
 
@@ -194,17 +234,17 @@ const SEAT_COLS: [string, (s: LignumSeatView, v: LignumView) => string][] = [
 
 function Seats({ v }: { v: LignumView }) {
   const seats = arr(v.seats) as LignumSeatView[];
+  const won = v.is_terminal ? arr(v.winners) : [];
   return (
-    <section aria-label="Seats">
-      <h3>Seats</h3>
-      <div className="lg-table-wrap">
-        <table className="lg-table">
+    <Sec label="Seats" eyebrow="Ledger" title="Seats" cls="lgd-full lgd-o5">
+      <div className="lgd-scroll">
+        <table className="tbl lgd-seats">
           <thead>
             <tr>
               <th />
               {seats.map((_, i) => (
-                <th key={i} scope="col">
-                  P{i}
+                <th key={i} scope="col" data-win={won.includes(i)}>
+                  <SeatTile seat={i} />
                 </th>
               ))}
             </tr>
@@ -213,23 +253,27 @@ function Seats({ v }: { v: LignumView }) {
             {SEAT_COLS.map(([name, f]) => (
               <tr key={name}>
                 <th scope="row">{name}</th>
-                {seats.map((s, i) => (
-                  <td key={i}>{f(s ?? {}, v)}</td>
-                ))}
+                {seats.map((s, i) => {
+                  const t = f(s ?? {}, v);
+                  return (
+                    <td key={i} className={isNum(t) ? "num" : undefined} data-win={won.includes(i)}>
+                      {t}
+                    </td>
+                  );
+                })}
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-    </section>
+    </Sec>
   );
 }
 
 function Track({ v }: { v: LignumView }) {
   const p = v.path ?? {};
   return (
-    <section aria-label="Path">
-      <h3>Path and supply</h3>
+    <Sec label="Path" eyebrow="Supply" title="Path and supply" cls="lgd-o6">
       <Dl
         rows={[
           ["Bearers", fmt(p.boys)],
@@ -240,15 +284,15 @@ function Track({ v }: { v: LignumView }) {
           ["Joiner", fmt(p.joiner)],
         ]}
       />
-      <h4>Token spots</h4>
-      <ul aria-label="Token spots">
+      <h4 className="eyebrow">Token spots</h4>
+      <ul aria-label="Token spots" className="lgd-spots">
         {(p.tokens ?? []).map((t) => (
           <li key={t.spot}>
             Spot {t.spot} (Location {t.location}): {t.taken ? "taken" : t.kind}
           </li>
         ))}
       </ul>
-    </section>
+    </Sec>
   );
 }
 
@@ -257,9 +301,9 @@ function Tasks({ v }: { v: LignumView }) {
   const w = v.winter ?? {};
   return (
     <>
-      <section aria-label="Task cards">
-        <h3>Task cards</h3>
+      <Sec label="Task cards" eyebrow="Board" title="Task cards" cls="lgd-o7">
         <Dl
+          list
           rows={[
             ["Row", fmt(t.row_ids)],
             ["Filled", fmt(t.filled_ids)],
@@ -272,10 +316,10 @@ function Tasks({ v }: { v: LignumView }) {
             ]),
           ]}
         />
-      </section>
-      <section aria-label="Planned work and buildings">
-        <h3>Planned work and buildings</h3>
+      </Sec>
+      <Sec label="Planned work and buildings" eyebrow="Board" title="Planned work and buildings" cls="lgd-o8">
         <Dl
+          list
           rows={[
             ["Planned work cards", fmt(v.pw?.names)],
             ["Building supply", fmt(v.buildings?.names)],
@@ -285,10 +329,10 @@ function Tasks({ v }: { v: LignumView }) {
             ],
           ]}
         />
-      </section>
-      <section aria-label="Winter">
-        <h3>Winter</h3>
+      </Sec>
+      <Sec label="Winter" eyebrow="Calendar" title="Winter" cls="lgd-o9">
         <Dl
+          list
           rows={[
             ["Order", seatList(w.order)],
             ["Pay", fmt(w.pay)],
@@ -306,7 +350,7 @@ function Tasks({ v }: { v: LignumView }) {
             }),
           ]}
         />
-      </section>
+      </Sec>
     </>
   );
 }
@@ -316,9 +360,9 @@ function Result({ v }: { v: LignumView }) {
   const final = arr(v.final) as number[];
   const winners = arr(v.winners);
   return (
-    <section aria-label="Result">
-      <h3>Final result</h3>
+    <Sec label="Result" eyebrow="Game over" title="Final result" cls="lgd-o1">
       <Dl
+        list
         rows={[
           [
             "Final dollars",
@@ -327,7 +371,7 @@ function Result({ v }: { v: LignumView }) {
           ["Winners", seatList(winners)],
         ]}
       />
-    </section>
+    </Sec>
   );
 }
 

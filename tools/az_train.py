@@ -253,7 +253,15 @@ def cmd_play(args: argparse.Namespace) -> None:
         temp_rounds=args.temp_rounds,
         explore=args.explore,
         ledger=args.ledger,
-        plan=dict(playouts=args.plan_playouts, areas=args.plan_areas, tasks=args.plan_tasks),
+        plan=dict(
+            playouts=args.plan_playouts,
+            areas=args.plan_areas,
+            tasks=args.plan_tasks,
+            keep=args.plan_keep,
+            ahead=args.plan_ahead,
+            commit_bonus=args.plan_commit,
+            reserve=args.plan_reserve,
+        ),
     )
     jobs: list[tuple[list[str], int, int]] = []
     lineups = [ln.split(",") for ln in args.lineups]
@@ -521,6 +529,10 @@ def main() -> None:
     p.add_argument("--plan-playouts", type=int, default=8)
     p.add_argument("--plan-areas", type=int, default=2)
     p.add_argument("--plan-tasks", type=int, default=3)
+    p.add_argument("--plan-keep", type=int, default=3)
+    p.add_argument("--plan-ahead", type=int, default=0, help="two-round plans (next-round tasks)")
+    p.add_argument("--plan-reserve", action="store_true", help="wood for scheduled tasks")
+    p.add_argument("--plan-commit", type=float, default=0.0, help="$ bonus for the scheduled task")
     p.add_argument("--ledger", action="store_true", help="dollar components per seat")
     p.add_argument("--json", default="")
     t = sub.add_parser("train")

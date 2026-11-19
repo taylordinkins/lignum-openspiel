@@ -8,6 +8,7 @@ import { roundSummary } from "./board/Trackers";
 import WorkerRoster from "./WorkerRoster";
 import type { LignumView } from "./types";
 import CardsPanel from "./CardsPanel";
+import "./details.css";
 import HutPicker from "./HutPicker";
 import ScoringPanel from "./ScoringPanel";
 import TaskCardsPanel from "./TaskCardsPanel";
@@ -23,21 +24,6 @@ const VIEWS: { id: View; label: string }[] = [
   { id: "tasks", label: "Task Cards" },
   { id: "details", label: "Details" },
 ];
-
-/** Compact per-seat money read-out for the Board tab (public, R-028). */
-function Money({ v }: { v: LignumView }) {
-  const seats = v.seats ?? [];
-  if (seats.length === 0) return null;
-  return (
-    <span className="lgb-money" role="group" aria-label="Money">
-      {seats.map((s, i) => (
-        <span key={i} aria-label={`${s?.label ?? `P${i}`} money $${s?.money ?? 0}`}>
-          {s?.label ?? `P${i}`} ${s?.money ?? 0}
-        </span>
-      ))}
-    </span>
-  );
-}
 
 function Panel({ game, ui }: { game: GameView; ui?: BoardUi }) {
   const [text, setText] = useState(false);
@@ -55,7 +41,7 @@ function Panel({ game, ui }: { game: GameView; ui?: BoardUi }) {
     <div className="lgp">
       <div className="lgb-bar">
         {!text && (
-          <div className="lgp-views" role="group" aria-label="Board views">
+          <div className="lgp-views seg" role="group" aria-label="Board views">
             {VIEWS.map((x) => (
               <button key={x.id} type="button" aria-pressed={view === x.id} onClick={() => setView(x.id)}>
                 {x.label}
@@ -63,28 +49,36 @@ function Panel({ game, ui }: { game: GameView; ui?: BoardUi }) {
             ))}
           </div>
         )}
-        {view === "board" && !text && <Money v={lv} />}
-        {summary && <strong className="lgb-round-line" data-testid="round-summary">{summary}</strong>}
+        {summary && (
+          <span className="chip lgb-round-line" data-testid="round-summary">
+            {summary}
+          </span>
+        )}
         {last && (
-          <span className="lgb-last-line" data-testid="last-action" aria-label="Last action">
+          <span className="chip lgb-last-line" data-testid="last-action" aria-label="Last action">
             Last: P{last.actor}: {last.label}
           </span>
         )}
-        <label>
-          <input type="checkbox" checked={text} onChange={(e) => setText(e.target.checked)} /> Text view only
-        </label>
-        {available.length > 1 && (
-          <label>
-            Theme{" "}
-            <select value={themeId} onChange={(e) => setThemeId(e.target.value as typeof themeId)}>
-              {available.map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
-          </label>
-        )}
+        <details className="lgb-viewopts">
+          <summary className="btn btn-sm">View</summary>
+          <div className="lgb-viewopts-pop card">
+            <label>
+              <input type="checkbox" checked={text} onChange={(e) => setText(e.target.checked)} /> Text view only
+            </label>
+            {available.length > 1 && (
+              <label>
+                Theme{" "}
+                <select value={themeId} onChange={(e) => setThemeId(e.target.value as typeof themeId)}>
+                  {available.map((t) => (
+                    <option key={t} value={t}>
+                      {t}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+          </div>
+        </details>
       </div>
       <HutPicker game={game} ui={ui} />
       <div className="lgp-stage">
@@ -101,9 +95,11 @@ function Panel({ game, ui }: { game: GameView; ui?: BoardUi }) {
           {!text && <TaskCardsPanel game={game} />}
         </div>
         <div className="lgp-pane lgp-details" {...on("details")}>
-          <ScoringPanel game={game} />
-          <WorkerRoster v={lv} />
-          <TextBoard game={game} ui={ui} />
+          <div className="lgd-grid">
+            <ScoringPanel game={game} />
+            <WorkerRoster v={lv} />
+            <TextBoard game={game} ui={ui} />
+          </div>
         </div>
       </div>
     </div>

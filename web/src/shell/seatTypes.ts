@@ -7,6 +7,7 @@ export const SEAT_PRESETS: { value: SeatType; label: string }[] = [
   { value: "heuristic", label: "Heuristic bot" },
   { value: "strategist", label: "Strategist bot" },
   { value: "az", label: "AZ bot" },
+  { value: "azpp", label: "AZPP bot" },
   { value: "mcts-fast", label: "MCTS (fast)" },
   { value: "mcts", label: "MCTS" },
 ];
@@ -24,4 +25,11 @@ export function seatTypeName(t: string): string {
 
 export function thinkingText(seatType: string, seat: number): string {
   return `${seatTypeName(seatType)} (P${seat}) is thinking…`;
+}
+
+/** Seat kind as shown on panels and prompts: "Human", "Random bot", "MCTS (50 sims) bot". */
+export function seatKindName(t: string): string {
+  const preset = SEAT_PRESETS.find((p) => p.value === t);
+  if (preset) return preset.label;
+  return t === "human" ? "Human" : `${seatTypeName(t)} bot`;
 }

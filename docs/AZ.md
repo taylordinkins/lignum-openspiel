@@ -127,6 +127,62 @@ game); the AZ search finishes more of them than the plain strategist does, at so
 sales. A confirmation on fresh seeds (9100+) was started and stopped early at the user's request;
 it is still to do.
 
+### Two-round plans (step 1 of the multi-round search, 2026-11-13)
+
+`PlanConfig.ahead` (`--plan-ahead N`) adds candidates "this round's task (own choice, none or a
+top task), then no task or one of the N best laid-out tasks for the next seasonal round"
+(`RoundPlan.then`); unclaimed tasks stay face up (R-036), and a follow-up task taken by another
+seat falls back to own choice. The plan is still searched again every round. `commit_bonus`
+(`--plan-commit $`) favours the scheduled task when re-planning. The strategist does not yet
+reserve wood for a scheduled task it does not hold (step 2).
+
+100 games vs `heuristic-v6`, seeds 9000+ (same seeds as above):
+
+| Bot | $ | Tasks done | Incomplete |
+|---|---|---|---|
+| plan + strategist, one-round (above) | 62.1 (se 1.5) | 2.43 | 0.51 |
+| plan + strategist, ahead 2 | 66.7 (se 1.3) | 2.60 | 0.41 |
+| plan + AZ, one-round (above) | 72.5 (se 1.1) | 2.71 | 0.30 |
+| **plan + AZ, ahead 2** | **74.3 (se 1.0)** | **2.83** | **0.15** |
+| plan + AZ, ahead 2, commit $1 | 73.7 (se 1.0) | 2.78 | 0.19 |
+
+Plan + AZ ahead 2 by component: wood 40.4, tasks 54.5, joinery 6.0, joiner income 11.4,
+craftwork 1.5, winter -0.8, loans -2.7, spending -45.0, start and other 9.0. The gain is tasks
+(+1.9) with half the unfinished ones; it is not just more compute (16 one-round playouts gave the
+strategist only +1.1 over 8). The commit bonus did not help. Cost: about 14 min per 100 games on 12
+cores.
+
+Fresh-seed confirmation, 200 games vs `heuristic-v6`, seeds 9100+ (2026-11-13):
+
+| Bot | $ | Tasks done | Incomplete |
+|---|---|---|---|
+| plan + AZ, one-round (the `az` seat) | 70.4 (se 0.8) | 2.67 | 0.28 |
+| plan + AZ, ahead 2 | 71.1 (se 0.8) | 2.71 | 0.20 |
+
+These seeds are about $2 harder than 9000+ for both. The ahead-2 gain shrinks from +1.8 to +0.7
+(within noise); over all 300 games it is about +1.1. Fewer unfinished tasks holds up. The `az`
+seat stays one-round for now.
+
+### Wood for scheduled tasks (step 2, 2026-11-13)
+
+`PlanConfig.reserve` (`--plan-reserve`; `StrategistBot.reserve_planned`): the laid-out tasks a
+plan schedules for this seat and not held yet (`Ctx.planned`) join the slot plan after every held
+slot: they reserve spare logs, add needs (cutting, sawing, hardwood, area value) and count for
+drying-1 entries. A task's own value leaves its planned wood out (the first version counted it
+against itself and took fewer tasks: $65.3 / $73.6).
+
+100 games vs `heuristic-v6`, seeds 9000+, all with ahead 2:
+
+| Executor | no reserve | reserve |
+|---|---|---|
+| plan + strategist | 66.7 (se 1.3) | 65.4 (se 1.6) |
+| plan + AZ | 74.3 (se 1.0) | 73.2 (se 1.1) |
+
+No gain (about -$1 on both, within noise). With reserve the AZ bot sells more wood (41.2 vs
+40.4), earns less from tasks (53.1 vs 54.5) and leaves more unfinished (0.27 vs 0.15). A likely reading (not checked game by game): holding
+spare logs for a task that may never be taken (re-planned, or taken by the other seat) costs
+sales without finishing more tasks. Kept off.
+
 ## The `az` seat
 
 `server/bots.py` registers `az` (`lignum/bots/az/seat.py`, `AZSeat`): plan + AZ, 8 plan

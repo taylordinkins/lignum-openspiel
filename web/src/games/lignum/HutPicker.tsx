@@ -3,6 +3,7 @@ import type { GameView } from "../../shell/useGame";
 import type { BoardUi } from "../registry";
 import { areaSequence } from "./board/sectionTargets";
 import type { LignumView } from "./types";
+import "./details.css";
 
 const AREAS = ["Drying", "Food", "Mill worker"];
 
@@ -30,7 +31,10 @@ function Picker({ ids, remaining, ui }: { ids: number[][]; remaining: number; ui
   };
   return (
     <div className="lgp-hut" role="group" aria-label="Board: hut token areas">
-      <span>Hut tokens left to place: {remaining - placed}</span>
+      <span className="lgp-hut-title">
+        <strong>Place hut tokens</strong>
+        <span>Hut tokens left to place: {remaining - placed}</span>
+      </span>
       {AREAS.map((n, h) => (
         <button
           key={n}

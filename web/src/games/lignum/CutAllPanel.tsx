@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { GameView } from "../../shell/useGame";
 import type { BoardUi } from "../registry";
 import type { LignumView } from "./types";
+import "./details.css";
 
 /** Action ids (docs/ACTIONS.md section 5): ASSIGN_WORKER(0) and TAKE_WOOD(a, k). */
 const ASSIGN_HIRED = 174;
@@ -64,16 +65,21 @@ function Stepper({ plan, enabled, onAct }: { plan: CutPlan; enabled: boolean; on
   const set = (k: number, d: number) =>
     setCounts((c) => c.map((n, i) => (i === k ? n + d : n)));
   return (
-    <section aria-label="Cut with all hired woodcutters">
-      <h3>Cut with all hired woodcutters</h3>
-      <p>
+    <section aria-label="Cut with all hired woodcutters" className="panel-framed lgd-card lgd-cut">
+      <header>
+        <span className="eyebrow">Your move</span>
+        <h3>Cut with all hired woodcutters</h3>
+      </header>
+      <p className="lgd-cut-hint">
         {plan.cutters} hired woodcutter{plan.cutters === 1 ? "" : "s"} left, area {plan.area + 1}
       </p>
       <ul>
         {plan.wood.map((w, k) =>
           w > 0 ? (
             <li key={k}>
-              {plan.kindNames[k] ?? k} (of {w}){" "}
+              <span className="lgd-kind">
+                {plan.kindNames[k] ?? k} (of {w})
+              </span>{" "}
               <button
                 type="button"
                 aria-label={`Fewer ${plan.kindNames[k] ?? k}`}
@@ -101,6 +107,7 @@ function Stepper({ plan, enabled, onAct }: { plan: CutPlan; enabled: boolean; on
       </p>
       <button
         type="button"
+        className="btn-primary"
         disabled={!enabled || total < 1}
         onClick={() => onAct(batchIds(plan.area, counts))}
       >

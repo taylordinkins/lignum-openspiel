@@ -1,7 +1,9 @@
 .lgs { width: 100%; display: flex; flex-direction: column; min-height: 0; height: 100%; }
-.lgs-tabs { display: flex; flex-wrap: wrap; gap: 4px; margin: 0 0 3px; flex: none; }
-.lgs-tab { font-size: 0.75rem; padding: 1px 8px; border: 1px solid #777; border-radius: 4px; background: #fff; cursor: pointer; }
-.lgs-tab[aria-pressed="true"] { background: #ffe9a8; border-color: #7a4b00; font-weight: 700; }
+.lgs-tabs { margin: 0 0 var(--sp-2); flex: none; align-self: flex-start; flex-wrap: wrap; }
+.lgs-tab { gap: 6px; }
+.lgs-tab .seat-tile { font-size: var(--fs-xs); }
+.lgs-tab-cash { font-weight: 700; font-variant-numeric: tabular-nums; }
+.lgs-tab-you { font-size: var(--fs-2xs); opacity: 0.85; }
 .lgs-pads { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start; justify-content: center; flex: 1 1 0; min-height: 0; }
 .lgs-pad { position: relative; container-type: inline-size; flex: 1 1 420px; min-width: 0; }
 @media (min-width: 900px) {
@@ -10,16 +12,17 @@
 }
 .lgs-img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .lgs-r { position: absolute; transform: translate(-50%, -50%); box-sizing: border-box; display: flex; flex-wrap: wrap; align-content: center; align-items: center; justify-content: center; gap: 0.6cqw; overflow: hidden; }
-.lgs-i { position: relative; display: inline-flex; align-items: center; gap: 0.3cqw; font: 700 2cqw sans-serif; color: #2b2312; background: #fff8; border-radius: 1cqw; padding: 0.2cqw 0.8cqw; }
+.lgs-i { position: relative; display: inline-flex; align-items: center; gap: 0.3cqw; font: 700 2cqw sans-serif; color: var(--ink-deep); background: #fff8; border-radius: 1cqw; padding: 0.2cqw 0.8cqw; }
 .lgs-i img { width: 4.5cqw; height: auto; max-height: 6cqw; object-fit: contain; }
 .lgs-ext .lgs-i { font-size: 5cqw; }
 .lgs-ext .lgs-i img { width: 12cqw; max-height: 14cqw; }
 .lgs-off { opacity: 0.35; }
-.lgs-ledger { display: flex; flex-wrap: wrap; gap: 2px 14px; margin-top: 3px; font-size: 0.8rem; align-items: center; flex: none; max-height: 4.2rem; overflow: auto; }
-.lgs-ledger > div { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+.lgs-ledger { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-2); margin-top: var(--sp-2); font-size: var(--fs-sm); align-items: center; flex: none; max-height: 5rem; overflow: auto; }
+.lgs-ledger > div { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; padding: 2px 10px; background: var(--paper-sunk); border: 1px solid var(--paper-edge); border-radius: var(--r-pill); font-weight: 600; color: var(--ink-soft); }
+.lgs-ledger > div .eyebrow { font-size: var(--fs-2xs); }
 .lgs-ledger img { height: 1.6rem; width: auto; }
-.lgs-chip { background: #fff; border: 1px solid #999; border-radius: 4px; padding: 0 4px; }
-.lgs-chip.lgs-done { background: #d9f2d9; }
+.lgs-chip { background: var(--paper-raised); border: 1px solid var(--paper-edge); border-radius: var(--r-xs); padding: 0 6px; font-size: var(--fs-xs); font-weight: 600; }
+.lgs-chip.lgs-done { background: var(--ok-tint); }
 .lgs-ledger .lgs-i { font-size: 0.85rem; }
 .lgs-ledger .lgs-i img { height: 1.5rem; width: auto; max-height: none; }
 .lgs-hired { flex-direction: column; flex-wrap: nowrap; gap: 0; justify-content: flex-start; }
@@ -31,19 +34,19 @@
 .lgs-ext .lgs-bslot .lgs-i img { width: auto; max-width: 100%; height: auto; max-height: 100%; }
 .lgs-ext .lgs-bslot .lgs-i { max-height: 100%; }
 .lgs-hot-wrap { position: absolute; transform: translate(-50%, -50%); z-index: 2; }
-.lgs-hot { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; cursor: pointer; background: #ffd24a33; border: 0.4cqw solid #d99a00; border-radius: 1cqw; }
-.lgs-hot:hover, .lgs-hot:focus-visible, .lgs-hot-lit { background: #ffd24a88; outline: 0.4cqw solid #7a4b00; }
+.lgs-hot { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; cursor: pointer; background: #ffd24a33; border: 0.4cqw solid var(--amber); border-radius: 1cqw; }
+.lgs-hot:hover, .lgs-hot:focus-visible, .lgs-hot-lit { background: #ffd24a88; outline: 0.4cqw solid var(--amber-dark); }
 .lgs-pop { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; flex-direction: column; gap: 2px; background: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px; white-space: nowrap; font-size: 0.8rem; }
 .lgs-pop-up { top: auto; bottom: 100%; }
-.lgs-pop .lgs-hot-lit { background: #ffe9a8; }
+.lgs-pop .lgs-hot-lit { background: var(--amber-tint); }
 /* Keep the printed "Mill worker" caption visible: seat the meeple in the lower part of its box. */
 .lgs-mill { align-content: flex-end; }
 .lgs-mill .lgs-i img { width: 3.6cqw; max-height: 3.4cqw; }
-.lgs-woodpile { display: flex; gap: 6px; align-items: center; flex: none; margin: 0 0 3px; padding: 1px 8px; min-height: 1.9rem; font-size: 0.85rem; background: #e7d7b0; color: #2b2312; border: 2px solid #8a5a2b; border-radius: 8px; }
-.lgs-woodpile .lgs-i { font-size: 0.85rem; padding: 0 4px; }
+.lgs-woodpile { display: flex; flex-wrap: wrap; gap: var(--sp-2); align-items: center; flex: none; margin: 0 0 var(--sp-2); padding: 3px var(--sp-3); min-height: 2.2rem; font-size: var(--fs-sm); background: var(--paper-raised); color: var(--ink-deep); border: 1px solid var(--paper-edge); border-radius: var(--r); box-shadow: var(--shadow-1); }
+.lgs-woodpile .lgs-i { font-size: var(--fs-sm); padding: 0 8px 0 4px; background: var(--paper-sunk); border: 1px solid var(--paper-edge); border-radius: var(--r-xs); }
 .lgs-woodpile .lgs-i img { height: 1.4rem; width: auto; max-height: none; }
-.lgs-empty { opacity: 0.6; font-style: italic; }
+.lgs-empty { color: var(--ink-muted); font-style: italic; }
 /* Building effect text under the placed building: its own line, clamped, full text in the tooltip. */
 .lgs-bslot { flex-direction: column; flex-wrap: nowrap; gap: 0.4cqw; }
 .lgs-bslot:has(.lgs-cap) .lgs-i { max-height: 64%; min-height: 0; }
-.lgs-cap { flex: none; max-width: 100%; box-sizing: border-box; padding: 0 0.6cqw; font: 600 max(0.62rem, 1.15cqw)/1.15 sans-serif; color: #2b2312; text-align: center; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; overflow-wrap: anywhere; }
+.lgs-cap { flex: none; max-width: 100%; box-sizing: border-box; padding: 0 0.6cqw; font: 600 max(0.62rem, 1.15cqw)/1.15 sans-serif; color: var(--ink-deep); text-align: center; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; overflow-wrap: anywhere; }

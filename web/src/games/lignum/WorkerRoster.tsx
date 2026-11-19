@@ -1,5 +1,6 @@
 import { useTheme } from "./theme/ThemeProvider";
-import { seatColor } from "./board/seatColors";
+import SeatTile from "./SeatTile";
+import "./details.css";
 import type { LignumSeatView, LignumView } from "./types";
 
 const arr = (x: unknown): unknown[] => (Array.isArray(x) ? x : []);
@@ -62,17 +63,21 @@ export default function WorkerRoster({ v }: { v: LignumView }) {
   const seats = arr(v.seats) as (LignumSeatView | null)[];
   return (
     <section aria-label="Worker roster" className="lgw">
-      <h3>Worker roster</h3>
+      <header>
+        <span className="eyebrow">Workers</span>
+        <h3>Worker roster</h3>
+      </header>
+      <div className="lgw-seats">
       {seats.map((s, i) =>
         s ? (
-          <div key={i} role="group" aria-label={`${s.label || `P${i}`} workers`} className="lgw-seat">
+          <div key={i} role="group" aria-label={`${s.label || `P${i}`} workers`} className="card lgw-seat">
             <h4>
-              <span className="lgw-dot" style={{ background: seatColor(i) }} aria-hidden="true" /> {s.label || `P${i}`}
-              {i === v.seat ? " (you)" : ""}
+              <SeatTile seat={i} label={s.label || `P${i}`} />
+              {i === v.seat && <span className="lgw-you"> (you)</span>}
             </h4>
-            <table>
+            <table className="tbl">
               <thead>
-                <tr><th>Worker</th><th>Colour</th><th>Count</th><th>Location</th></tr>
+                <tr><th>Worker</th><th>Colour</th><th className="num">Count</th><th>Location</th></tr>
               </thead>
               <tbody>
                 {rosterRows(s, i).map((r) => {
@@ -81,7 +86,7 @@ export default function WorkerRoster({ v }: { v: LignumView }) {
                     <tr key={r.key} data-testid="roster-row" aria-label={`${s.label || `P${i}`} ${plural(r.count, r.type.toLowerCase())}, ${r.colour}: ${r.where}`}>
                       <td>{sp && <img src={sp.src} alt="" className="lgw-img" />} {r.type}</td>
                       <td>{r.colour}</td>
-                      <td>{r.count}</td>
+                      <td className="num">{r.count}</td>
                       <td>{r.where}</td>
                     </tr>
                   );
@@ -91,6 +96,7 @@ export default function WorkerRoster({ v }: { v: LignumView }) {
           </div>
         ) : null,
       )}
+      </div>
     </section>
   );
 }

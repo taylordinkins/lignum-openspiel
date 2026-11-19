@@ -89,7 +89,9 @@ test("hotseat: curtain appears on seat change and hides the previous pick", asyn
   await curtain.getByRole("button", { name: "Click when ready" }).click();
   await expect(curtain).toHaveCount(0);
   await expect(page.getByText("Current player: P1 (human)")).toBeVisible();
-  await expect(page.getByText("Cutting areas")).toBeVisible();
+  // The board and P1's actions are back ("Cutting areas" now lives on the Details tab).
+  await expect(page.getByRole("group", { name: "Game board" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /^Pick cutting area/ }).first()).toBeVisible();
 
   // P1 picks; the curtain moves on to P2.
   await page.getByRole("button", { name: /^Pick cutting area/ }).first().click();

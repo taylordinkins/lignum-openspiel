@@ -14,7 +14,8 @@ Layout (``data/llm_games/<run>/``, git-ignored):
     playbook.md           lessons the LLM carries between games (written by the LLM)
 
 Game g: seed ``SEED_BASE + g``, the LLM sits in seat ``g % 2``, 2 players, joinery side, win_loss
-returns, standard winter, opponent ``heuristic-v6``. Chance and bot moves are derived per step from
+returns, standard winter, opponent ``heuristic-v6`` (``start --opponent SPEC`` sets another bot
+seat for that game; it is stored in session.json). Chance and bot moves are derived per step from
 the seed, so a session is rebuilt exactly by replaying its history. The LLM sees only
 ``observation_string(seat)`` (the engine hides the opponent's unrevealed pick); forced single-action
 nodes are applied automatically. Exit codes: 0 ok, 2 bad input or illegal action.
@@ -73,9 +74,11 @@ def _hidden(state: Any, seat: int, action: int) -> bool:
     return state.phase == PHASE_PK and A.decode(action).name == "PICK_AREA"
 
 
-def advance(state: Any, history: list[int], seed: int, seat: int, log: list[str]) -> None:
+def advance(
+    state: Any, history: list[int], seed: int, seat: int, log: list[str], opponent: str = OPPONENT
+) -> None:
     """Apply chance nodes, bot moves and the LLM's forced moves until the LLM must choose."""
-    bot = _bot(OPPONENT, False)
+    bot = _bot(opponent, False)
     while not state.is_terminal():
         step = len(history)
         if state.is_chance_node():
@@ -148,6 +151,7 @@ def finish(run: str, game_no: int, state: Any, sess: dict[str, Any]) -> dict[str
         "game": game_no,
         "seed": sess["seed"],
         "seat": seat,
+        "opponent": sess.get("opponent", OPPONENT),
         "returns": list(state.returns()),
         "final": [float(x) for x in state.final],
         "win": 1.0
@@ -174,10 +178,15 @@ def cmd_start(args: argparse.Namespace, out: TextIO) -> int:
         return 2
     d.mkdir(parents=True, exist_ok=True)
     seed = seed_of(args.game)
-    sess: dict[str, Any] = {"seed": seed, "seat": llm_seat(args.game), "history": []}
+    sess: dict[str, Any] = {
+        "seed": seed,
+        "seat": llm_seat(args.game),
+        "opponent": args.opponent,
+        "history": [],
+    }
     state: Any = new_game().new_initial_state()
     log: list[str] = []
-    advance(state, sess["history"], seed, sess["seat"], log)
+    advance(state, sess["history"], seed, sess["seat"], log, args.opponent)
     save_session(args.run, args.game, sess)
     render(state, sess, log, out)
     return 0
@@ -234,7 +243,7 @@ def cmd_act(args: argparse.Namespace, out: TextIO) -> int:
         state.apply_action(a)
         history.append(a)
         applied += 1
-        advance(state, history, seed, seat, log)
+        advance(state, history, seed, seat, log, sess.get("opponent", OPPONENT))
     save_session(args.run, args.game, sess)
     if applied == 0:
         print(f"nothing played: {stop}", file=sys.stderr)
@@ -326,6 +335,12 @@ def main(argv: list[str] | None = None, out: TextIO = sys.stdout) -> int:
         s = sub.add_parser(name)
         s.add_argument("--run", required=True)
         s.add_argument("--game", type=int, required=True)
+        if name == "start":
+            s.add_argument(
+                "--opponent",
+                default=OPPONENT,
+                help="bot seat for the other seat (stored in session.json), e.g. strategist, az",
+            )
         if name == "act":
             s.add_argument("--note", default="", help="one line of reasoning, saved to trajectory")
             s.add_argument("ids", type=int, nargs="*", help="action ids, played in order")

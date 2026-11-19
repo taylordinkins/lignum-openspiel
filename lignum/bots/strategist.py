@@ -146,11 +146,18 @@ class RoundPlan:
     ``task``: None = the strategist's own choice, -1 = take no task this round, else the task to
     take (valued at least ``PLAN_TASK_VALUE`` so the route and money reserve go for it).
     ``area``: the cutting area to pick this round (None = own choice).
+    ``then``: plans for later rounds (multi-round plan search), followed when their round comes.
     """
 
     round: int
     task: int | None = None
     area: int | None = None
+    then: tuple[RoundPlan, ...] = ()
+
+    def for_round(self, rnd: int) -> RoundPlan | None:
+        if self.round == rnd:
+            return self
+        return next((q for q in self.then if q.round == rnd), None)
 
 
 PLAN_TASK_VALUE = 10.0
@@ -187,6 +194,9 @@ class Ctx:
         self.phase = state.phase
         self._slots: list[Slot] | None = None
         self._plan: SlotPlan | None = None
+        # Tasks a plan schedules for this seat that it does not hold yet (set by the strategist
+        # when ``reserve_planned``): their slots get wood in the slot plan, after held tasks.
+        self.planned: tuple[int, ...] = ()
 
     # ---- holdings
     @property
@@ -297,6 +307,20 @@ class Ctx:
             self._slots = out
         return self._slots
 
+    def planned_slots(self) -> list[Slot]:
+        """Slots of ``planned`` tasks (not held yet, so none is filled)."""
+        if not self.planned:
+            return []
+        return [
+            Slot(i, task, kind, milled, stage, _reward(task))
+            for i, (task, _req, kind, milled, stage) in enumerate(self.t.task_slots)
+            if task in self.planned
+        ]
+
+    def plan_slots(self) -> list[Slot]:
+        """Open slots of held tasks, then the slots of planned ones."""
+        return self.open_slots() + self.planned_slots()
+
     def slot_plan(self) -> SlotPlan:
         if self._plan is None:
             self._plan = make_slot_plan(self)
@@ -333,6 +357,9 @@ def _reqs(task: int) -> list[tuple[int, int, int]]:
 def make_slot_plan(c: Ctx) -> SlotPlan:
     """Reserve current logs (by zone) for open slots, hardest stage first; list missing logs.
 
+    Slots of planned tasks (``Ctx.planned``) come after every held slot, so they only take wood
+    the held tasks do not need.
+
     A log in zone z (0 sale, 1..3 drying) at the next tasks phase index i reaches zone z+k at
     index i+k. Stage s >= 1 needs zone s+1; stage 0 takes the sale area or drying 1. Drying hut
     tokens can make up missing steps; the Small Storage piece fills any stage of its kind.
@@ -360,6 +387,7 @@ def make_slot_plan(c: Ctx) -> SlotPlan:
         return z + 1 if (after_tasks and z >= 1) else z
 
     slots = sorted(c.open_slots(), key=lambda s: (-s.stage, -s.reward))
+    slots += sorted(c.planned_slots(), key=lambda s: (-s.stage, -s.reward))
     for sl in slots:
         if not sl.milled:
             key = (0, 10 + sl.kind)
@@ -501,6 +529,10 @@ def hw_committed(c: Ctx) -> int:
 
 def task_value(c: Ctx, task: int) -> float:
     """Expected net dollars of taking face-up ``task`` now."""
+    if task in c.planned:  # its own planned wood must not count against it
+        own = c
+        c = Ctx(own.s, own.me, own.w)
+        c.planned = tuple(t for t in own.planned if t != task)
     reqs = _reqs(task)
     reward = _reward(task)
     i = c.cur_opp()
@@ -571,10 +603,29 @@ class StrategistBot:
         self._rng: random.Random | None = None
         # Per-seat round plans (plan-level search); empty = plain strategist.
         self.plans: dict[int, RoundPlan] = {}
+        # Plan wood for tasks the round plan schedules but this seat does not hold yet.
+        self.reserve_planned = False
 
     def _plan(self, c: Ctx) -> RoundPlan | None:
         p = self.plans.get(c.me)
-        return p if p is not None and p.round == c.rnd else None
+        return p.for_round(c.rnd) if p is not None else None
+
+    def _planned_tasks(self, c: Ctx) -> tuple[int, ...]:
+        """Laid-out tasks the plan schedules for this seat: this round's (until it takes a task)
+        and later rounds'."""
+        p = self.plans.get(c.me)
+        if p is None:
+            return ()
+        held = c.s.held_tasks[c.me]
+        out: list[int] = []
+        for q in (p, *p.then):
+            if q.round < c.rnd or q.task is None or q.task < 0:
+                continue
+            if q.round == c.rnd and c.s.task_taken[c.me]:
+                continue
+            if q.task in c.s.task_row and q.task not in held and q.task not in out:
+                out.append(q.task)
+        return tuple(out)
 
     # ------------------------------------------------------------ entry
     def choose(self, state: pyspiel.State, rng: random.Random) -> int:
@@ -584,6 +635,8 @@ class StrategistBot:
             return legal[0]
         seat = state.current_player()
         c = Ctx(state, seat, self.w)
+        if self.reserve_planned:
+            c.planned = self._planned_tasks(c)
         self._rng = rng
         try:
             a = self._dispatch(c, legal)
@@ -1742,7 +1795,7 @@ class StrategistBot:
             r = plan.res(0, p)
             # Only reserved logs that need drying (stage >= 1) go first.
             hi = sum(
-                1 for sl in c.open_slots() if plan.slot_src.get(sl.slot) == (0, p) and sl.stage >= 1
+                1 for sl in c.plan_slots() if plan.slot_src.get(sl.slot) == (0, p) and sl.stage >= 1
             )
             n = min(room, hi)
             if n:

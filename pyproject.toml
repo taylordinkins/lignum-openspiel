@@ -54,7 +54,7 @@ select = ["E", "F", "I", "B", "UP", "SIM"]
 [tool.pyright]
 include = ["lignum", "server", "tools", "tests/support"]
 # Offline training script; needs torch from the optional `bots` group, which CI does not install.
-exclude = ["tools/az_train.py"]
+exclude = ["tools/az_train.py", "tools/ppo_train.py"]
 stubPath = "typings"
 pythonVersion = "3.12"
 typeCheckingMode = "strict"

@@ -1,6 +1,8 @@
 import type { GameView } from "../../shell/useGame";
 import type { CardProps } from "./cards/Card";
 import CardStrip from "./cards/CardStrip";
+import SeatTile from "./SeatTile";
+import "./details.css";
 import type { LignumSeatView, LignumTaskCard, LignumView } from "./types";
 
 const arr = (x: unknown): unknown[] => (Array.isArray(x) ? x : []);
@@ -26,7 +28,7 @@ export function taskCards(v: LignumView, indices: unknown[], names: unknown[]): 
   });
 }
 
-function SeatCards({ s, v, label }: { s: LignumSeatView; v: LignumView; label: string }) {
+function SeatCards({ s, v, label, seat }: { s: LignumSeatView; v: LignumView; label: string; seat: number }) {
   const craftNames = arr(v.craft_order).map(str);
   const craft: CardProps[] = arr(s.held_craft).flatMap((n, i) =>
     Array.from({ length: Math.min(num(n), 12) }, () => ({ kind: "craftwork" as const, id: craftNames[i] ?? `craft ${i}` })),
@@ -45,14 +47,25 @@ function SeatCards({ s, v, label }: { s: LignumSeatView; v: LignumView; label: s
     id: str((p as { name?: unknown } | null)?.name),
     detail: `target round ${num((p as { target?: unknown } | null)?.target)}`,
   }));
+  const held = taskCards(v, arr(s.held_tasks), arr(s.held_task_ids));
+  const buildings: CardProps[] = arr(s.building_names).map((n) => ({ kind: "building" as const, id: str(n) }));
   return (
-    <section aria-label={`${label} cards`}>
-      <h4>{label}</h4>
-      <CardStrip title={`${label} held tasks`} cards={taskCards(v, arr(s.held_tasks), arr(s.held_task_ids))} />
-      <CardStrip title={`${label} planned work`} cards={plans} />
-      <CardStrip title={`${label} buildings`} cards={arr(s.building_names).map((n) => ({ kind: "building" as const, id: str(n) }))} />
-      <CardStrip title={`${label} craftwork`} cards={craft} />
-      <CardStrip title={`${label} loans`} cards={loanCards} />
+    <section aria-label={`${label} cards`} className="card lgc-sec">
+      <header>
+        <SeatTile seat={seat} label={label} />
+        <div className="lgc-sec-text">
+          <span className="eyebrow">Seat cards</span>
+          <h4>{label}</h4>
+        </div>
+      </header>
+      <div className="lgc-sec-body">
+        {[held, plans, buildings, craft, loanCards].every((c) => c.length === 0) && <p className="lgc-empty">No cards held yet.</p>}
+        <CardStrip title={`${label} held tasks`} cards={held} />
+        <CardStrip title={`${label} planned work`} cards={plans} />
+        <CardStrip title={`${label} buildings`} cards={buildings} />
+        <CardStrip title={`${label} craftwork`} cards={craft} />
+        <CardStrip title={`${label} loans`} cards={loanCards} />
+      </div>
     </section>
   );
 }
@@ -72,13 +85,23 @@ export default function CardsPanel({ game }: { game: GameView }) {
   const discarded: CardProps[] = arr(v.placement?.discarded_ids).map((n) => ({ kind: "placement" as const, id: str(n) }));
   return (
     <section aria-label="Cards" className="lgc-panel">
-      <CardStrip title="Task row" cards={taskCards(v, arr(v.tasks?.row), [])} />
-      <CardStrip title="Tasks with pieces placed" cards={arr(v.tasks?.filled_ids).map((n) => ({ kind: "task" as const, id: str(n) }))} />
-      <CardStrip title={`Winter cards, year ${year}`} cards={winter} />
-      <CardStrip title="Planned-work row" cards={pw} />
-      <CardStrip title="Building supply" cards={arr(v.buildings?.names).map((n) => ({ kind: "building" as const, id: str(n) }))} />
-      <CardStrip title="Placement cards discarded" cards={discarded} />
-      {seats.map((s, i) => (s ? <SeatCards key={i} s={s} v={v} label={str(s.label) || `P${i}`} /> : null))}
+      <section aria-label="Board cards" className="card lgc-sec">
+        <header>
+          <div className="lgc-sec-text">
+            <span className="eyebrow">Shared</span>
+            <h3>Board cards</h3>
+          </div>
+        </header>
+        <div className="lgc-sec-body">
+          <CardStrip title="Task row" cards={taskCards(v, arr(v.tasks?.row), [])} />
+          <CardStrip title="Tasks with pieces placed" cards={arr(v.tasks?.filled_ids).map((n) => ({ kind: "task" as const, id: str(n) }))} />
+          <CardStrip title={`Winter cards, year ${year}`} cards={winter} />
+          <CardStrip title="Planned-work row" cards={pw} />
+          <CardStrip title="Building supply" cards={arr(v.buildings?.names).map((n) => ({ kind: "building" as const, id: str(n) }))} />
+          <CardStrip title="Placement cards discarded" cards={discarded} />
+        </div>
+      </section>
+      {seats.map((s, i) => (s ? <SeatCards key={i} s={s} v={v} seat={i} label={str(s.label) || `P${i}`} /> : null))}
     </section>
   );
 }

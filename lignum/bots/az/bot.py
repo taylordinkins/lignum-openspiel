@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import random
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import pyspiel
@@ -31,12 +32,21 @@ class AZBot:
         model: str | Path = DEFAULT_MODEL,
         cfg: SearchConfig | None = None,
         temperature: float = 0.0,
+        default_bot: Any = None,
     ) -> None:
+        """``default_bot`` (e.g. a greedy ``PPOBot``) replaces the strategist as the default
+        policy: leaf playouts, the prior's extra-weighted move and the unsearched decisions. Its
+        ``strat`` (a ``StrategistBot``) is the one a plan search sets plans on."""
         self.net = NumpyNet(model)
         self.cfg = cfg or SearchConfig()
         self.temperature = temperature
         self._enc: dict[int, Encoder] = {}
-        self._strat = StrategistBot()
+        self._play: Any = default_bot
+        self._strat: StrategistBot = (
+            default_bot.strat if default_bot is not None else StrategistBot()
+        )
+        if self._play is None:
+            self._play = self._strat
         self._hook_rng = random.Random(0)
         self.last: tuple[list[int], np.ndarray] | None = None  # (cands, visit policy)
 
@@ -47,7 +57,7 @@ class AZBot:
 
     def _prior_hook(self, state: LignumState, cands: list[int]) -> int | None:
         try:
-            return self._strat.choose(state, self._hook_rng)
+            return self._play.choose(state, self._hook_rng)
         except Exception:  # noqa: BLE001
             return None
 
@@ -58,7 +68,7 @@ class AZBot:
         return Searcher(self.net, enc, self.cfg, self._prior_hook, self._default)
 
     def _default(self, state: LignumState, rng: random.Random) -> int:
-        return self._strat.choose(state, rng)
+        return self._play.choose(state, rng)
 
     def choose(self, state: pyspiel.State, rng: random.Random) -> int:
         assert isinstance(state, LignumState)
@@ -68,7 +78,7 @@ class AZBot:
             return cands[0]
         if self.cfg.macro and not is_strategic(state):
             self.last = None
-            return self._strat.choose(state, rng)
+            return self._play.choose(state, rng)
         s = self.searcher(state)
         if self.cfg.sims <= 0:
             prior, _ = s.evaluate(state, cands)

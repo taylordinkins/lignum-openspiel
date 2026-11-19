@@ -59,7 +59,7 @@
           "seats": {
             "items": {
               "description": "human or a bot seat type (random, heuristic, heuristic-v1, heuristic-v2, heuristic-v3, heuristic-v4, heuristic-v5, heuristic-v6, heuristic-v7, strategist, az, mcts, mcts-fast).",
-              "pattern": "^(human|random|heuristic|heuristic-v1|heuristic-v2|heuristic-v3|heuristic-v4|heuristic-v5|heuristic-v6|heuristic-v7|strategist|az|mcts|mcts-fast)$",
+              "pattern": "^(human|random|heuristic|heuristic-v1|heuristic-v2|heuristic-v3|heuristic-v4|heuristic-v5|heuristic-v6|heuristic-v7|strategist|az|azpp|mcts|mcts-fast)$",
               "type": "string"
             },
             "title": "Seats",
@@ -129,7 +129,7 @@
           "seats": {
             "items": {
               "description": "human or a bot seat type (random, heuristic, heuristic-v1, heuristic-v2, heuristic-v3, heuristic-v4, heuristic-v5, heuristic-v6, heuristic-v7, strategist, az, mcts, mcts-fast).",
-              "pattern": "^(human|random|heuristic|heuristic-v1|heuristic-v2|heuristic-v3|heuristic-v4|heuristic-v5|heuristic-v6|heuristic-v7|strategist|az|mcts|mcts-fast)$",
+              "pattern": "^(human|random|heuristic|heuristic-v1|heuristic-v2|heuristic-v3|heuristic-v4|heuristic-v5|heuristic-v6|heuristic-v7|strategist|az|azpp|mcts|mcts-fast)$",
               "type": "string"
             },
             "title": "Seats",
@@ -274,7 +274,7 @@
           "seat_types": {
             "items": {
               "description": "human or a bot seat type (random, heuristic, heuristic-v1, heuristic-v2, heuristic-v3, heuristic-v4, heuristic-v5, heuristic-v6, heuristic-v7, strategist, az, mcts, mcts-fast).",
-              "pattern": "^(human|random|heuristic|heuristic-v1|heuristic-v2|heuristic-v3|heuristic-v4|heuristic-v5|heuristic-v6|heuristic-v7|strategist|az|mcts|mcts-fast)$",
+              "pattern": "^(human|random|heuristic|heuristic-v1|heuristic-v2|heuristic-v3|heuristic-v4|heuristic-v5|heuristic-v6|heuristic-v7|strategist|az|azpp|mcts|mcts-fast)$",
               "type": "string"
             },
             "title": "Seat Types",
@@ -283,7 +283,7 @@
           "seats": {
             "items": {
               "description": "human or a bot seat type (random, heuristic, heuristic-v1, heuristic-v2, heuristic-v3, heuristic-v4, heuristic-v5, heuristic-v6, heuristic-v7, strategist, az, mcts, mcts-fast).",
-              "pattern": "^(human|random|heuristic|heuristic-v1|heuristic-v2|heuristic-v3|heuristic-v4|heuristic-v5|heuristic-v6|heuristic-v7|strategist|az|mcts|mcts-fast)$",
+              "pattern": "^(human|random|heuristic|heuristic-v1|heuristic-v2|heuristic-v3|heuristic-v4|heuristic-v5|heuristic-v6|heuristic-v7|strategist|az|azpp|mcts|mcts-fast)$",
               "type": "string"
             },
             "title": "Seats",
@@ -693,6 +693,24 @@
               ],
               "title": "Seat"
             }
+          },
+          {
+            "description": "Playback frame: render the state after the first `at` raw history entries (the unit of `history_length` and `HistoryEntry.index`; one entry per action or chance outcome). Read-only; filtered for `seat` as the live view was at that state. Outside 0..history_length is 409; equal to it is the live view.",
+            "in": "query",
+            "name": "at",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Playback frame: render the state after the first `at` raw history entries (the unit of `history_length` and `HistoryEntry.index`; one entry per action or chance outcome). Read-only; filtered for `seat` as the live view was at that state. Outside 0..history_length is 409; equal to it is the live view.",
+              "title": "At"
+            }
           }
         ],
         "responses": {
@@ -715,6 +733,16 @@
               }
             },
             "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict"
           },
           "422": {
             "content": {

@@ -41,9 +41,6 @@ export function groupHistory(history: HistoryEntry[]): LogItem[] {
 const badge = (s: ActorStyle): CSSProperties => ({
   background: s.fill,
   color: s.ink,
-  borderRadius: 4,
-  padding: "0 0.35em",
-  fontWeight: "bold",
 });
 
 /** Past actions (labelled by the server), oldest first; kept scrolled to the newest. */
@@ -59,14 +56,13 @@ export default function ActionLog({ history, actorStyle }: Props) {
       ref={(el) => {
         if (el) el.scrollTop = el.scrollHeight;
       }}
-      style={{ maxHeight: "10em", overflowY: "auto", paddingLeft: "2em" }}
     >
       {items.map((it) => {
         if (it.kind === "action") {
           const e = it.entry;
           return (
             <li key={e.index} {...current(e.index)}>
-              <span style={e.actor !== null && actorStyle ? badge(actorStyle(e.actor)) : undefined}>
+              <span className="lg-actor" data-seat={e.actor ?? undefined} style={e.actor !== null && actorStyle ? badge(actorStyle(e.actor)) : undefined}>
                 P{e.actor}:
               </span>{" "}
               {e.label} <small>(action {it.n})</small>

@@ -361,21 +361,39 @@ class Session:
         if seen != n_player_actions:
             raise SessionError(f"only {seen} player actions have been taken")
 
-    def view(self, seat: int) -> JSON:
-        return self.adapter.view(self.state, seat)
+    def state_at(self, at: int | None) -> pyspiel.State:
+        """The state after the first `at` history entries (None = the live state).
 
-    def history_entries(self, seat: int) -> list[JSON]:
+        Read-only snapshot for playback frames; replays from the initial state."""
+        if at is None or at == len(self.history):
+            return self.state
+        if not 0 <= at <= len(self.history):
+            raise SessionError(f"at={at} out of range 0..{len(self.history)}")
+        state = self._initial()
+        for a in self.history[:at]:
+            state.apply_action(a)
+        return state
+
+    def view(self, seat: int, at: int | None = None, at_state: pyspiel.State | None = None) -> JSON:
+        return self.adapter.view(self.state_at(at) if at_state is None else at_state, seat)
+
+    def history_entries(
+        self, seat: int, at: int | None = None, at_state: pyspiel.State | None = None
+    ) -> list[JSON]:
         """Labelled history as seen by `seat`: replay, labelling each action as it was when it
-        was legal. Actions the adapter hides from `seat` (history_mask) get its label, id None."""
+        was legal. Actions the adapter hides from `seat` (history_mask) get its label, id None.
+        `at` keeps the first `at` entries and masks them as the live view did at that state."""
         state = self._initial()
         out: list[JSON] = []
-        for i, (a, who) in enumerate(zip(self.history, self.actors, strict=True)):
+        n = len(self.history) if at is None else at
+        now = self.state_at(at) if at_state is None else at_state
+        for i, (a, who) in enumerate(zip(self.history[:n], self.actors[:n], strict=True)):
             shown: int | None = a
             if who == CHANCE:
                 label = self.adapter.chance_label(state, a)
                 actor = None
             else:
-                masked = self.adapter.history_mask(state, who, a, self.state, seat)
+                masked = self.adapter.history_mask(state, who, a, now, seat)
                 if masked is None:
                     label = str(self.adapter.action_meta(state, a)["label"])
                 else:

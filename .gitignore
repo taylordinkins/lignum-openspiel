@@ -33,3 +33,5 @@ data/bots/az/*.npz
 
 # Copyrighted rulebooks and official art: local only, never committed (see README)
 third_party/
+data/bots/ppo/*
+!data/bots/ppo/current.npz

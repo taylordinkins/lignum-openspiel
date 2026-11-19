@@ -37,9 +37,10 @@ export default function YourMove({
   }
   return (
     <section className="lg-move" data-state="active" aria-label="Your move" role="region">
-      <h2>Your move: choose an action</h2>
+      <h2 className="sr-only">Your move: choose an action</h2>
+      <p className="eyebrow lg-move-eyebrow">Your actions</p>
       {phase && <p className="lg-move-sub">Phase: {phase}</p>}
-      <p className="lg-move-hint">Highlighted spots on the board and sawmill do the same; hover a button to find its spot.</p>
+      <p className="lg-move-hint">Highlighted spots on the board do the same; hover a button to find its spot.</p>
       <ActionList
         actions={actions}
         disabled={busy}

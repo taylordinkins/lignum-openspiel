@@ -1,0 +1,19 @@
+.lgs { display: flex; flex-direction: column; gap: var(--sp-2); flex: none; }
+.lgs-seat { position: relative; padding: 4px 8px 4px 13px; overflow: hidden; }
+.lgs-seat::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 5px; background: var(--seat-0); }
+.lgs-seat[data-seat="1"]::before { background: var(--seat-1); }
+.lgs-seat[data-seat="2"]::before { background: var(--seat-2); }
+.lgs-seat[data-seat="3"]::before { background: var(--seat-3); }
+.lgs-seat[data-acting="true"] { border: var(--rule) solid var(--ink); box-shadow: var(--shadow-2); }
+.lgs-head { display: flex; align-items: center; gap: var(--sp-2); min-width: 0; }
+.lgs-kind { font-size: var(--fs-sm); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.lgs-tag { font-size: var(--fs-2xs); font-weight: 800; letter-spacing: var(--tracking-caps); padding: 1px 5px; border-radius: var(--r-xs); color: var(--ink-on-dark); background: var(--ink-soft); white-space: nowrap; }
+.lgs-tag[data-tag="TO ACT"] { background: var(--ink-deep); }
+.lgs-tag[data-tag="YOU"] { background: var(--forest); }
+.lgs-tag[data-tag="FIRST"] { background: var(--wood); }
+.lgs-cash { margin-left: auto; font-family: var(--font-display); font-size: var(--fs-lg); line-height: 1; color: var(--ink); }
+.lgs-stats { display: flex; flex-wrap: wrap; gap: 1px 7px; margin: 2px 0 0; font-size: var(--fs-xs); color: var(--ink-soft); }
+.lgs-stats > div { display: inline-flex; gap: 3px; }
+.lgs-stats dt { font-weight: 400; color: var(--ink-muted); }
+.lgs-stats dd { margin: 0; font-weight: 700; }
+.lgs-stats > div[data-danger="true"] dt, .lgs-stats > div[data-danger="true"] dd { color: var(--danger); }

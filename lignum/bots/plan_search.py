@@ -3,12 +3,18 @@
 At this seat's first decision of a round on the supply side (setup pick, round pick or travel),
 candidate ``RoundPlan``s are built: the strategist's own choice, the best few cutting areas (when
 the pick is still ahead) crossed with "no task" and the best few laid-out tasks. Each plan is
-scored by playouts of the strategist for every seat to the end of the game, with this seat
-following the plan for the round; all plans share the same seeds (common random numbers), and a
-two-stage race spends the second half of the playouts on the leaders only. The best plan is set on
-the executor's strategist (the executor plays every decision: the strategist itself, or the AZ
-search whose priors and default policy are that strategist). Other seats' unrevealed picks are
-resampled from the strategist's pick model, so no hidden information is read (R-029, R-038).
+scored by playouts of the strategist (or another ``sim`` policy built on it) for every seat to the
+end of the game, with this seat following the plan for the round; all plans share the same seeds
+(common random numbers), and a two-stage race spends the second half of the playouts on the leaders
+only. The best plan is set on the executor's strategist (the executor plays every decision: the
+strategist itself, or the AZ search whose priors and default policy are that strategist). Other
+seats' unrevealed picks are resampled from the strategist's pick model, so no hidden information is
+read (R-029, R-038).
+
+With ``ahead`` > 0 the candidates also include two-round plans (this round's task, then the task
+for the next seasonal round), so this round's choice is judged with a committed follow-up; the
+plan is still searched again every round, optionally favouring the scheduled task
+(``commit_bonus``).
 """
 
 from __future__ import annotations
@@ -35,19 +41,36 @@ class PlanConfig:
     tasks: int = 3  # task candidates besides "own choice" and "no task"
     keep: int = 3  # plans kept for the second stage (plus the strategist's own plan)
     default_bonus: float = 0.5  # dollars of benefit of the doubt for the strategist's own plan
+    # Two-round plans: "task t now (own choice, none or a top task), then task y next seasonal
+    # round" for y in "no task" and the ``ahead`` best laid-out tasks other than t (0 = off).
+    ahead: int = 0
+    # Dollars of bonus, when re-planning, for plans that take the task the previous round's plan
+    # scheduled for this round (stability; 0 = none).
+    commit_bonus: float = 0.0
+    # The strategists (executor and playouts) plan wood for scheduled tasks not held yet.
+    reserve: bool = False
 
 
 class PlanSearchBot:
     """``executor``: a ``StrategistBot`` or an ``AZBot`` (its ``strategist`` gets the plan)."""
 
-    def __init__(self, executor: Any = None, cfg: PlanConfig | None = None) -> None:
+    def __init__(
+        self, executor: Any = None, cfg: PlanConfig | None = None, sim: Any = None
+    ) -> None:
+        """``sim``: the playout policy for every seat (default a fresh strategist); a bot with a
+        ``strat`` attribute (e.g. a greedy ``PPOBot``) gets the plan on that strategist."""
         self.executor = executor if executor is not None else StrategistBot()
         self.strat: StrategistBot = (
             self.executor if isinstance(self.executor, StrategistBot) else self.executor.strategist
         )
         self.cfg = cfg or PlanConfig()
-        self.sim = StrategistBot()
+        self.sim_bot: Any = sim if sim is not None else StrategistBot()
+        self.sim: StrategistBot = (
+            self.sim_bot if isinstance(self.sim_bot, StrategistBot) else self.sim_bot.strat
+        )
+        self.strat.reserve_planned = self.sim.reserve_planned = self.cfg.reserve
         self._planned: tuple[int, int, int] | None = None
+        self._chosen: dict[int, RoundPlan] = {}  # seat -> last plan chosen (for commit_bonus)
         self.last_scores: dict[RoundPlan, float] = {}
 
     # ------------------------------------------------------------------ entry
@@ -58,7 +81,9 @@ class PlanSearchBot:
             key = (id(state.draws), seat, state.round)
             if key != self._planned and len(state.legal_actions()) > 1:
                 self._planned = key
-                self.strat.plans[seat] = self.search(state, rng)
+                plan = self.search(state, rng)
+                self._chosen[seat] = plan
+                self.strat.plans[seat] = plan
         plan = self.strat.plans.get(seat)
         if (
             state.phase in (PHASE_SP, PHASE_PK)
@@ -81,11 +106,27 @@ class PlanSearchBot:
             ranked = sorted(legal, key=lambda a: -self.strat.area_value(c, a))
             areas += ranked[: cfg.areas]
         tasks: list[int | None] = [None]
+        ranked_t: list[int] = []
         if rnd in SEASONAL and not state.task_taken[seat] and state.task_row:
             vals = {t: task_value(c, t) for t in state.task_row}
             ranked_t = sorted((t for t in vals if vals[t] > -50), key=lambda t: -vals[t])
             tasks += [-1, *ranked_t[: cfg.tasks]]
-        return [RoundPlan(rnd, task=t, area=a) for a in areas for t in tasks]
+            due = self._due_task(seat, rnd)
+            if due is not None and due in state.task_row and due not in tasks:
+                tasks.append(due)
+        plans = [RoundPlan(rnd, task=t, area=a) for a in areas for t in tasks]
+        nxt = next((r for r in SEASONAL if r > rnd), None)
+        if cfg.ahead > 0 and nxt is not None and len(tasks) > 1:
+            for t in tasks:
+                follow = [-1, *[y for y in ranked_t if y != t][: cfg.ahead]]
+                plans += [RoundPlan(rnd, task=t, then=(RoundPlan(nxt, task=y),)) for y in follow]
+        return plans
+
+    def _due_task(self, seat: int, rnd: int) -> int | None:
+        """The task the previous plan scheduled for round ``rnd`` (None = none or own choice)."""
+        prev = self._chosen.get(seat)
+        q = prev.for_round(rnd) if prev is not None and prev.round != rnd else None
+        return q.task if q is not None and q.task is not None and q.task >= 0 else None
 
     # ------------------------------------------------------------------ search
     def search(self, state: LignumState, rng: random.Random) -> RoundPlan:
@@ -105,6 +146,11 @@ class PlanSearchBot:
             rest = sum(self.playout(state, p, seat, sd) for sd in seeds[half:])
             means[p] = (sums[p] + rest) / len(seeds)
         means[default] += cfg.default_bonus
+        due = self._due_task(seat, state.round)
+        if cfg.commit_bonus and due is not None:
+            for p in leaders:
+                if p.task == due:
+                    means[p] += cfg.commit_bonus
         self.last_scores = means
         return max(leaders, key=lambda p: means[p])
 
@@ -120,7 +166,7 @@ class PlanSearchBot:
                 outs = st.chance_outcomes()
                 st.apply_action(rng.choices([x for x, _ in outs], [p for _, p in outs])[0])
             else:
-                st.apply_action(sim.choose(st, rng))
+                st.apply_action(self.sim_bot.choose(st, rng))
         sim.plans = {}
         return float(st.final[seat])
 

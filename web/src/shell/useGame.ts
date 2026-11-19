@@ -219,6 +219,17 @@ export function useGame(
     return () => clearTimeout(t);
   }, [game, done, busy, autoAdvance, autoAdvanceDelay, act]);
 
+  /** Read-only playback frame: the view after the first `at` history entries (UI_DESIGN §3). */
+  const fetchFrame = useCallback(
+    async (at: number, frameSeat: number): Promise<GameView | null> => {
+      const { data } = await api.GET("/api/games/{game_id}", {
+        params: { path: { game_id: gameId }, query: { seat: frameSeat, at } },
+      });
+      return data ?? null;
+    },
+    [gameId],
+  );
+
   const retry = useCallback(
     () =>
       run(() =>
@@ -239,6 +250,7 @@ export function useGame(
     goBack,
     rewind,
     refresh,
+    fetchFrame,
     autoNote,
     botThinking: !!game?.bot_thinking && !done,
   };

@@ -1,6 +1,7 @@
 import { createElement } from "react";
 import type { GamePlugin } from "../registry";
 import BoardPanel from "./BoardPanel";
+import SeatPanels from "./SeatPanels";
 import type { LignumView } from "./types";
 
 export const lignumPlugin: GamePlugin = {
@@ -21,4 +22,5 @@ export const lignumPlugin: GamePlugin = {
     return `${a.label} ($${card.reward}: ${reqs})`;
   },
   renderBoard: (g, ui) => createElement(BoardPanel, { game: g, ui }),
+  renderSeats: (g, ui) => createElement(SeatPanels, { game: g, ui }),
 };

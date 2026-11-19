@@ -1,0 +1,121 @@
+/*
+ * Lignum design tokens (docs/UI_DESIGN.md §2). The single source of colour, type, spacing and
+ * depth for the web app chrome. Palette follows the board's cream card stock and wood panels;
+ * seat colours mirror SEAT_COLORS in games/lignum/board/seatColors.ts (the pawn sprites).
+ * Components read these custom properties; avoid raw hex values elsewhere (SVG art excepted).
+ */
+:root {
+  /* ---- paper (the cards' cream stock) */
+  --paper: #f6eedb; /* panels, board surround */
+  --paper-raised: #fcf8ec; /* cards and dialogs sitting on the paper */
+  --paper-sunk: #efe4c8; /* wells, inputs, table stripes */
+  --paper-deep: #e6d6b0; /* page background */
+  --paper-edge: #d6c096; /* hairlines on paper */
+
+  /* ---- inks (bark) */
+  --ink: #22190f; /* text, icons */
+  --ink-soft: #4a3a26; /* secondary text */
+  --ink-muted: #6b5840; /* captions and hints (AA on paper) */
+  --ink-on-dark: #f6eedb;
+  --ink-deep: #2b2312; /* dark chips and curtain, the board's lettering ink */
+
+  /* ---- forest (primary actions) */
+  --forest: #2f5d3a;
+  --forest-dark: #1e3f27;
+  --forest-hover: #397048;
+  --forest-tint: #dfe9d6;
+
+  /* ---- wood (frames; the Planned Work panel) */
+  --wood: #8a5a2b;
+  --wood-dark: #5e3b1a;
+  --wood-light: #c99a5b;
+  --wood-line: #9b7f4b; /* quiet borders on controls */
+
+  /* ---- accent / glow (legal targets, highlights) */
+  --glow: #ffd24a;
+  --glow-soft: rgba(255, 210, 74, 0.35);
+  --glow-strong: rgba(255, 210, 74, 0.53);
+  --amber: #d99a00;
+  --amber-dark: #7a4b00;
+  --amber-tint: #ffe9a8;
+  --amber-wash: rgba(217, 154, 0, 0.12);
+
+  /* ---- status */
+  --danger: #a3341f; /* loans, errors */
+  --danger-tint: #f7dcd2;
+  --ok: #2f7d3a;
+  --ok-tint: #d9f2d9;
+  --focus: #1f5f99; /* focus ring: river blue, distinct from wood and forest */
+  --focus-ring: 0 0 0 2px var(--paper-raised), 0 0 0 5px var(--focus);
+  --scrim: rgba(34, 25, 15, 0.5);
+
+  /* ---- seats (SEAT_COLORS) and the label ink on each */
+  --seat-0: #c0392b;
+  --seat-1: #2e6fb5;
+  --seat-2: #2e8b57;
+  --seat-3: #d4a017;
+  --seat-ink-0: #ffffff;
+  --seat-ink-1: #ffffff;
+  --seat-ink-2: #ffffff;
+  --seat-ink-3: #22190f;
+
+  /* ---- type */
+  --font-display: Fraunces, Georgia, "Times New Roman", serif;
+  --font-body: "Source Sans 3", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --fs-2xs: 0.6875rem; /* 11px */
+  --fs-xs: 0.75rem; /* 12px */
+  --fs-sm: 0.8125rem; /* 13px */
+  --fs-base: 0.9375rem; /* 15px: body */
+  --fs-md: 1.0625rem; /* 17px */
+  --fs-lg: 1.25rem; /* 20px */
+  --fs-xl: 1.625rem; /* 26px */
+  --fs-2xl: 2.25rem; /* 36px */
+  --fs-hero: 3.5rem; /* 56px */
+  --lh-tight: 1.15;
+  --lh: 1.4;
+  --tracking-caps: 0.06em;
+
+  /* ---- space (4 px grid) */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+
+  /* ---- shape */
+  --r-xs: 3px;
+  --r-sm: 5px;
+  --r: 8px;
+  --r-lg: 12px;
+  --r-pill: 999px;
+  --rule: 2px;
+  --rule-heavy: 3px;
+
+  /* ---- depth: paper on a table, warm brown shadows, never glossy */
+  --shadow-1: 0 1px 0 rgba(94, 59, 26, 0.12), 0 1px 3px rgba(60, 38, 14, 0.14);
+  --shadow-2: 0 1px 0 rgba(94, 59, 26, 0.14), 0 4px 12px rgba(60, 38, 14, 0.18);
+  --shadow-3: 0 2px 0 rgba(94, 59, 26, 0.2), 0 14px 40px rgba(40, 24, 8, 0.34);
+  --inset: inset 0 1px 2px rgba(60, 38, 14, 0.18);
+  /* framed panels: a wood frame with a thin cream rule inside it */
+  --frame-wood: 0 0 0 1px var(--wood-dark), inset 0 0 0 2px var(--paper-raised), inset 0 0 0 3px var(--wood);
+
+  /* ---- motion */
+  --t-fast: 0.12s;
+  --t: 0.2s;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* ---- layout */
+  --side-w: 20rem;
+  --page-pad: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --t-fast: 0s;
+    --t: 0s;
+  }
+}

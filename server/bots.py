@@ -5,7 +5,7 @@ from __future__ import annotations
 import copy
 import random
 
-from lignum.bots.az.seat import AZSeat
+from lignum.bots.az.seat import AZPPSeat, AZSeat
 from lignum.bots.base import Bot, RandomBot, bot_candidates
 from lignum.bots.heuristic import HeuristicBot
 from lignum.bots.mcts import ISMCTSBot
@@ -45,6 +45,8 @@ BOTS: dict[str, Bot] = {
     # Plan-level search over AlphaZero-style search on a strategist-primed net (docs/AZ.md);
     # 2 players on the joinery side, the strategist otherwise.
     "az": AZSeat(),
+    # az with the learned policy (docs/PPO.md) as its default player instead of the strategist.
+    "azpp": AZPPSeat(),
     "mcts": ISMCTSBot(
         simulations=1000, time_budget=10.0, rollout="heuristic", rollout_depth=ROLLOUT_DEPTH
     ),
@@ -57,7 +59,7 @@ HUMAN = "human"
 # Keep in sync with the seat types accepted by is_valid_seat_type().
 SEAT_TYPE_PATTERN = (
     r"^(human|random|heuristic|heuristic-v1|heuristic-v2|heuristic-v3|heuristic-v4|heuristic-v5|heuristic-v6|heuristic-v7"
-    r"|strategist|az|mcts|mcts-fast)$"
+    r"|strategist|az|azpp|mcts|mcts-fast)$"
 )
 
 

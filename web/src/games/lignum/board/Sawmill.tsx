@@ -3,6 +3,7 @@ import type { GameView } from "../../../shell/useGame";
 import type { BoardUi } from "../../registry";
 import { useTheme } from "../theme/ThemeProvider";
 import type { LignumSeatView, LignumView } from "../types";
+import { dollars } from "../money";
 import "./sawmill.css";
 import type { TargetAction } from "./clickTargets";
 import { GENERIC_PADS, PADS, type PadLayout } from "./sawmillLayout";
@@ -276,12 +277,12 @@ function Ledger({ s, v, seat }: { s: LignumSeatView; v: LignumView; seat: string
   };
   const group = (name: string, desc: string, kids: ReactNode) => (
     <div role="group" aria-label={`${seat} ${name}: ${desc}`}>
-      <strong>{name}:</strong> {kids}
+      <strong className="eyebrow">{name}:</strong> {kids}
     </div>
   );
   return (
     <div className="lgs-ledger">
-      {group("money", `$${num(s.money)}`, <span>${num(s.money)}</span>)}
+      {group("money", dollars(num(s.money)), <span>{dollars(num(s.money))}</span>)}
       {group(
         "loans",
         String(loans),
@@ -329,7 +330,7 @@ function Woodpile({ s, v, seat }: { s: LignumSeatView; v: LignumView; seat: stri
   const wp = kindItems(s.woodpile, K.length === 3 ? K : KINDS, "disk", UNMILLED);
   return (
     <div className="lgs-woodpile" role="group" aria-label={`${seat} woodpile: ${wp.map((i) => i.text).join(", ") || "empty"}`}>
-      <strong>Woodpile</strong>
+      <strong className="eyebrow">Woodpile</strong>
       {wp.length ? <Items items={wp} /> : <span className="lgs-empty">empty</span>}
     </div>
   );
@@ -361,13 +362,16 @@ export default function Sawmill({ game, ui }: { game: GameView; ui?: BoardUi }) 
       : undefined;
   return (
     <section className="lgs" aria-label="Sawmill pads">
-      <div className="lgs-tabs" role="group" aria-label="Choose seat">
+      <div className="lgs-tabs seg" role="group" aria-label="Choose seat">
         {seats.map((t, i) => {
           const l = str(t?.label) || `P${i}`;
           return (
             <button key={i} type="button" className="lgs-tab" aria-pressed={i === idx} aria-label={`Show ${l} sawmill`} onClick={() => setPick(i)}>
-              {l} ${num(t?.money)}
-              {i === v.seat ? " (you)" : ""}
+              <span className="seat-tile" data-seat={i}>
+                {l}
+              </span>{" "}
+              <span className="lgs-tab-cash">${num(t?.money)}</span>
+              {i === v.seat ? <span className="lgs-tab-you"> (you)</span> : null}
             </button>
           );
         })}

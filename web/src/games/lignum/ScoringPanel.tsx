@@ -1,4 +1,6 @@
 import type { GameView } from "../../shell/useGame";
+import SeatTile from "./SeatTile";
+import "./details.css";
 import type { LignumSeatScore, LignumSeatView, LignumView } from "./types";
 
 const arr = (x: unknown): unknown[] => (Array.isArray(x) ? x : []);
@@ -32,25 +34,34 @@ export default function ScoringPanel({ game }: { game: GameView }) {
   const repayText = typeof rp[1] === "number" && typeof rp[2] === "number" ? ` ($${rp[1]} for one loan, $${rp[2]} for two)` : "";
   const n = Math.max(final.length, score.length, arr(v.seats).length);
   return (
-    <section aria-label="Result" className="lgs-score">
-      <h3>Result</h3>
+    <section aria-label="Result" className="card lgs-score">
+      <header className="lgd-head">
+        <span className="eyebrow">Final sale</span>
+        <h3>Result</h3>
+      </header>
       {winners.length > 0 && (
         <p aria-label="Winners" className="lgs-win">
-          {winners.length > 1
-            ? `Tie: ${winners.map((w) => seatLabel(v, w)).join(", ")} share the win`
-            : `Winner: ${seatLabel(v, winners[0]!)}`}
+          {winners.length > 1 ? "Tie: " : "Winner: "}
+          {winners.map((w, k) => (
+            <span key={w}>
+              <SeatTile seat={w} label={seatLabel(v, w)} />
+              {k < winners.length - 1 && ", "}
+            </span>
+          ))}
+          {winners.length > 1 ? " share the win" : ""}
         </p>
       )}
-      <table aria-label="Final scores">
+      <div className="lgd-scroll">
+      <table aria-label="Final scores" className="tbl">
         <thead>
           <tr>
             <th scope="col">Seat</th>
             {COLS.map(([k, name]) => (
-              <th key={k} scope="col">
+              <th key={k} scope="col" className="num">
                 {name}
               </th>
             ))}
-            {returns && <th scope="col">Return</th>}
+            {returns && <th scope="col" className="num">Return</th>}
           </tr>
         </thead>
         <tbody>
@@ -59,16 +70,19 @@ export default function ScoringPanel({ game }: { game: GameView }) {
             const f = final[i] ?? sc?.final;
             return (
               <tr key={i} className={winners.includes(i) ? "lgs-win" : undefined}>
-                <th scope="row">{seatLabel(v, i)}</th>
+                <th scope="row">
+                  <SeatTile seat={i} label={seatLabel(v, i)} />
+                </th>
                 {COLS.map(([k]) => (
-                  <td key={k}>{k === "final" ? dollars(f) : dollars(sc?.[k] as number | undefined)}</td>
+                  <td key={k} className={k === "final" ? "num fin" : "num"}>{k === "final" ? dollars(f) : dollars(sc?.[k] as number | undefined)}</td>
                 ))}
-                {returns && <td>{typeof returns[i] === "number" ? returns[i]!.toFixed(3) : "-"}</td>}
+                {returns && <td className="num">{typeof returns[i] === "number" ? returns[i]!.toFixed(3) : "-"}</td>}
               </tr>
             );
           })}
         </tbody>
       </table>
+      </div>
       <p>
         <small>
           Final dollars = money after the final sale minus loan repayment{repayText}. The most final dollars wins; equal

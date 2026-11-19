@@ -9,6 +9,7 @@ describe("seat presets", () => {
       "heuristic",
       "strategist",
       "az",
+      "azpp",
       "mcts-fast",
       "mcts",
     ]);
@@ -20,6 +21,7 @@ describe("seat presets", () => {
     expect(seatTypeName("mcts")).toBe("MCTS");
     expect(seatTypeName("strategist")).toBe("Strategist");
     expect(seatTypeName("az")).toBe("AZ");
+    expect(seatTypeName("azpp")).toBe("AZPP");
   });
   it("builds the thinking text", () => {
     expect(thinkingText("random", 1)).toBe("Random (P1) is thinking…");

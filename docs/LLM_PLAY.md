@@ -34,3 +34,20 @@ round: (1) your pick and supply-path visit, (2) the wood-work phases W1-W7 (thes
 your own state, so script the whole round: saw, move, dry, sell, place pieces), (3) winter. Re-plan only
 when a script stops. Fall back to single actions when the position is unclear. Trajectory rows are still
 written for every action; put the intent of the segment in the first item's `#` note.
+
+## Baselines against the strong bots (runs `opus_strat`, `opus_az`, 2026-11-13)
+
+Game 0's setup (seed 400, Opus P0, empty playbook, step by step, Opus 5.5 medium effort, the brief
+above with "a bot" for "a heuristic bot"), opponent set by `start --opponent`. Chance in
+`llm_play` is keyed by history index, so only the setup draws are shared between games on a seed;
+later rounds' draws differ once the move counts differ.
+
+| Run | Opponent | Opus $ | Bot $ | Opus tasks | Opus decisions |
+|---|---|---|---|---|---|
+| opus1 g00 | heuristic-v6 | 80 | 44 | 3 | 263 |
+| opus_strat g00 | strategist | 52 | 33 | 2 | 281 |
+| opus_az g00 | az (plan + AZ) | 64 | 64 (tie) | 3 | 264 |
+
+Bots on the same setup (seed 400, P0 first, one game each): strategist 72-(-16) v6, 50-43
+strategist; api1_it6 (docs/PPO.md) 66-4 v6, 58-43 strategist; az 60-18 v6, 54-(-5) strategist,
+49-74 az.
